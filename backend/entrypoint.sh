@@ -40,9 +40,43 @@
 # # Servidor de desarrollo con autoreload
 # python manage.py runserver 0.0.0.0:8000
 
+#version 2
+
+# #!/usr/bin/env bash
+# set -e
+
+# echo "Esperando la base de datos en $POSTGRES_HOST:$POSTGRES_PORT ..."
+# python - << 'PYCODE'
+# import os, time, socket
+# host = os.environ.get("POSTGRES_HOST", "db")
+# port = int(os.environ.get("POSTGRES_PORT", "5432"))
+# for _ in range(60):
+#     try:
+#         with socket.create_connection((host, port), timeout=2):
+#             print("DB lista ✔")
+#             break
+#     except OSError:
+#         print("DB no disponible, reintentando...")
+#         time.sleep(2)
+# else:
+#     raise SystemExit("Timeout esperando la DB")
+# PYCODE
+
+# echo "Aplicando migraciones..."
+# python manage.py migrate --noinput
+
+# # Opcional en dev: collectstatic si ya tienes archivos estáticos
+# # echo "Collecting static..."
+# # python manage.py collectstatic --noinput
+
+# echo "Levantando servidor..."
+# python manage.py runserver 0.0.0.0:8000
 
 
-#!/usr/bin/env bash
+
+
+
+#!/usr/bin/env sh
 set -e
 
 echo "Esperando la base de datos en $POSTGRES_HOST:$POSTGRES_PORT ..."
@@ -65,7 +99,7 @@ PYCODE
 echo "Aplicando migraciones..."
 python manage.py migrate --noinput
 
-# Opcional en dev: collectstatic si ya tienes archivos estáticos
+# Si quieres recopilar estáticos (útil en prod)
 # echo "Collecting static..."
 # python manage.py collectstatic --noinput
 
