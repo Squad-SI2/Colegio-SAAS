@@ -1,2 +1,91 @@
-# ProyFinal-Si2
-Gestion Academica tipo SAAS
+
+<div align="center" width="100">
+	<h1>:classical_building: :robot: :brain: PROYECTO FINAL SI2 SAAS  :brain: :robot: :classical_building:</h1>
+</div>
+
+<!--
+<h3 align="center">
+  <b>Repositorio para almacenar todos los proyectos del semestre.</b>
+</h3>
+-->
+
+<pre>
+We're a group of passionate students. While preparing for exams, we're also diving into the world
+of programming and learning from each other along the way.
+</pre>
+
+<p align="center">
+  <a href="https://github.com/DenverCoder1/readme-typing-svg"><img src="https://readme-typing-svg.herokuapp.com?font=Time+New+Roman&color=cyan&size=25&center=true&vCenter=true&width=600&height=100&lines=Actualiza+tu+rama+en+todo+momento;Revisa+tu+codigo+antes+de+commitear;El+codigo+limpio+es+buen+camino..&hearts;"></a>
+</p>
+
+:rocket: Para iniciar:<br/>
+:green_circle: :one: CLONAR EL REPOSITORIO EN SU MAQUINA LOCAL<br/>
+```python
+git clone url-repositorio
+```
+:green_circle: :two: CREARSE UN RAMA<br/>
+
+```python
+git checkout -b nombre-de-mi-rama
+```
+
+```python
+git push origin nombre-de-mi-rama
+```
+
+
+<hr>
+
+<div align="center" width="100">
+  <h1>Stack</h1>
+  <!-- Languages -->
+  </br>
+  <h3>Languages and Frameworks</h3>
+  <!--
+  <img
+    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original-wordmark.svg"
+    width="60px"
+    alt="Java">
+    &nbsp;&nbsp;&nbsp;&nbsp;
+  <img
+    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg"
+    width="60px"
+    alt="Javascript">
+    &nbsp;&nbsp;&nbsp;&nbsp;-->
+  <img
+    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original-wordmark.svg"
+    width="60px"
+    alt="HTML5">
+    &nbsp;&nbsp;&nbsp;&nbsp;
+  <img
+    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original-wordmark.svg"
+    width="60px"
+    alt="css3">
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <!-- Frameworks -->
+	
+  </br>
+    <!-- tools -->
+  </br>
+  <h3>Tools</h3>
+  <img
+    src="https://cdn.simpleicons.org/github/FFFFFF"
+    width="50px"
+    alt="GitHub Logo White">
+  <img
+    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original-wordmark.svg"
+    width="60px"
+    alt="Docker">
+    &nbsp;&nbsp;&nbsp;&nbsp;
+  <img
+    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original-wordmark.svg"
+    width="65px"
+    alt="Git Wordmark">
+  <img
+    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original-wordmark.svg"
+    width="60px"
+    alt="VS Code">
+    &nbsp;&nbsp;&nbsp;&nbsp;
+</div>
+<hr>
+Last modified: 08/17/2025
