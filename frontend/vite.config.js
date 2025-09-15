@@ -7,20 +7,6 @@ import react from '@vitejs/plugin-react'
 // })
 
 
-
-// export default defineConfig({
-//   plugins: [react()],
-//   server: {
-//     host: true,
-//     port: 5173,
-//     strictPort: true, //opcional
-//     proxy: {
-//       // cualquier fetch a /api/* se redirige al backend dentro de la red Docker
-//       '/api': { target: 'http://backend:8000', changeOrigin: true }
-//     }
-//   }
-// })
-
 export default defineConfig({
   plugins: [react()],
   server: {
