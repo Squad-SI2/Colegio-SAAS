@@ -24,7 +24,6 @@ services:
     env_file: .env                      # Carga variables de entorno
     # En Linux/WSL evita archivos creados como root:
     user: "${UID:-1000}:${GID:-1000}"
-    #command: sh -c "./entrypoint.sh"    # Arranque del backend (espera DB, migra, runserver)
     command: /bin/sh -lc "./entrypoint.sh"
     volumes:
       - ./backend:/app                  # Hot-reload: tu código ↔ contenedor
@@ -56,8 +55,6 @@ services:
                 fi;
               fi;
           npm run dev -- --host 0.0.0.0 --port 5173"
-    # command: sh -lc "[ -d node_modules ] || (test -f package-lock.json && npm ci || npm i); npm run dev -- --host 0.0.0.0 --port 5173"
-    # sh -lc "npm run dev -- --host 0.0.0.0 --port 5173"
     depends_on:
       - backend                         # Para consumir la API
 

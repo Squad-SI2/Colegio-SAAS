@@ -20,6 +20,7 @@ def api_hello(request):
 def api_echo(request):
     # request.data ya viene parseado (JSON)
     payload = request.data if isinstance(request.data, dict) else {"raw": request.data}
+    print("api_echo fue llamado correctamente...!")
     return Response({
         "received": payload,
         "at": timezone.now().isoformat()
