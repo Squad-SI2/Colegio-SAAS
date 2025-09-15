@@ -1,0 +1,60 @@
+
+services:
+  db:
+    image: postgres:16-alpine         # Imagen liviana de Postgres 16
+    container_name: fs_db
+    environment:                       # Variables para inicializar la DB
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "55432:5432"                    # Exponer puerto a tu host
+    volumes:
+      - pgdata:/var/lib/postgresql/data # Datos persistentes (no se pierden)
+
+  backend:
+    build: ./backend                    # Construye con Dockerfile de backend/
+    container_name: fs_backend
+    env_file: .env                      # Carga variables de entorno
+    # En Linux/WSL evita archivos creados como root:
+    user: "${UID:-1000}:${GID:-1000}"
+    command: sh -c "./entrypoint.sh"    # Arranque del backend (espera DB, migra, runserver)
+    volumes:
+      - ./backend:/app                  # Hot-reload: tu código ↔ contenedor
+      - backend_static:/app/staticfiles # Estáticos recopilados
+      - backend_media:/app/media        # Archivos subidos
+    ports:
+      - "8000:8000"                     # API accesible desde tu host
+    depends_on:
+      - db                              # Arranca después de la DB
+
+  frontend:
+    image: node:20-bookworm               # Node debian para React + Vite
+    container_name: fs_frontend
+    working_dir: /app
+    env_file: .env
+    volumes:
+      - ./frontend:/app                 # Hot-reload del frontend
+      - node_modules_frontend:/app/node_modules            # node modules para el contenedor
+    ports:
+      - "5173:5173"                     # Vite dev server
+    command: >
+      sh -lc "if [ ! -x node_modules/.bin/vite ]; then
+                if [ -f package-lock.json ]; then
+                  npm ci --no-audit --no-fund;
+                else
+                  npm i --no-audit --no-fund;
+                fi;
+              fi;
+          npm run dev -- --host 0.0.0.0 --port 5173"
+    # command: sh -lc "[ -d node_modules ] || (test -f package-lock.json && npm ci || npm i); npm run dev -- --host 0.0.0.0 --port 5173"
+    # sh -lc "npm run dev -- --host 0.0.0.0 --port 5173"
+    depends_on:
+      - backend                         # Para consumir la API
+
+volumes:
+  pgdata:
+  backend_static:
+  backend_media:
+  node_modules_frontend:
+
