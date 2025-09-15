@@ -41,17 +41,18 @@ git push origin nombre-de-mi-rama
   <!-- Languages -->
   </br>
   <h3>Languages and Frameworks</h3>
-  <!--
-  <img
-    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original-wordmark.svg"
-    width="60px"
-    alt="Java">
-    &nbsp;&nbsp;&nbsp;&nbsp;
-  <img
-    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg"
-    width="60px"
-    alt="Javascript">
-    &nbsp;&nbsp;&nbsp;&nbsp;-->
+	<img
+  		src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg"
+  		width="60px"
+  		alt="Python">
+	<img
+	  src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/django/django-plain.svg"
+	  width="60px"
+	  alt="Django">
+	<img
+	  src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg"
+	  width="60px"
+	  alt="React">
   <img
     src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original-wordmark.svg"
     width="60px"
@@ -88,4 +89,4 @@ git push origin nombre-de-mi-rama
     &nbsp;&nbsp;&nbsp;&nbsp;
 </div>
 <hr>
-Last modified: 08/17/2025
+Last modified: 15/09/2025
