@@ -9,6 +9,7 @@ from rest_framework import status
 
 @api_view(["GET"])
 def api_hello(request):
+    print("Endpoint /api/hello fue llamado a las", timezone.now())
     return Response({
         "ok": True,
         "msg": "Hola desde DRF",
