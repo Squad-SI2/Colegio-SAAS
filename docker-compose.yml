@@ -24,7 +24,8 @@ services:
     env_file: .env                      # Carga variables de entorno
     # En Linux/WSL evita archivos creados como root:
     user: "${UID:-1000}:${GID:-1000}"
-    command: sh -c "./entrypoint.sh"    # Arranque del backend (espera DB, migra, runserver)
+    #command: sh -c "./entrypoint.sh"    # Arranque del backend (espera DB, migra, runserver)
+    command: /bin/sh -lc "./entrypoint.sh"
     volumes:
       - ./backend:/app                  # Hot-reload: tu código ↔ contenedor
       - backend_static:/app/staticfiles # Estáticos recopilados
