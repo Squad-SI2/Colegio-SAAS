@@ -32,7 +32,10 @@ git checkout -b nombre-de-mi-rama
 ```python
 git push origin nombre-de-mi-rama
 ```
-
+:green_circle: :three: DOCKER<br/>
+```python
+docker compose up --build
+```
 
 <hr>
 
