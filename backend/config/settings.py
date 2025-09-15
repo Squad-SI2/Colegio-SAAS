@@ -16,30 +16,34 @@ import os
 import environ
 
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+#-------Inicializadodor django environ---------
+BASE_DIR = Path(__file__).resolve().parent.parent  # -> backend/
+env = environ.Env(DEBUG=(bool, False))
 
+# .env está en la raíz del repo (junto a docker-compose.yml)
+environ.Env.read_env(BASE_DIR.parent / ".env")
+#------------------------------------
 
-#-----------Inicializar django-environ------
-env = environ.Env(
-    DEBUG=(bool, False)
-)
-environ.Env.read_env(os.path.join(BASE_DIR, '..', '.env'))
-#---------------------------------------------
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=@)@gd&gleleerop%eq7+_6pa1ur(s#h_mra5oqd%c2f&8)&^+'
+#SECRET_KEY = 'django-insecure-=@)@gd&gleleerop%eq7+_6pa1ur(s#h_mra5oqd%c2f&8)&^+'
+
+
+SECRET_KEY = env('SECRET_KEY', default='insecure-dev-only')
+DEBUG = env.bool('DEBUG', default=True)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 #Anterior
 #ALLOWED_HOSTS = []
+
 #nuevo
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", "backend"]
+#ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", "backend"]
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1", "0.0.0.0", "backend"])
 
 # Application definition
 
@@ -100,6 +104,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 #     }
 # }
 
+#DB
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -138,18 +143,17 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # TIME_ZONE = 'UTC'
 
+
 LANGUAGE_CODE = env('LANGUAGE_CODE', default='es')
-
 TIME_ZONE = env('TIME_ZONE', default='America/La_Paz')
-
 USE_I18N = True
-
 USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+#Static/Media
 STATIC_URL = 'static/'
 
 #-----nuevos------------
@@ -158,10 +162,25 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 #-----nuevos------------
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+
+# CORS / CSRF (dev)
+if env.bool("CORS_ALLOW_ALL_ORIGINS", default=False):
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[
+        "http://localhost:5173", "http://127.0.0.1:5173", "http://frontend:5173"
+    ])
+
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[
+    "http://localhost:5173", "http://127.0.0.1:5173", "http://frontend:5173"
+])
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

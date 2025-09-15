@@ -12,6 +12,12 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data # Datos persistentes (no se pierden)
 
+    healthcheck:
+          test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} || exit 1"]
+          interval: 5s
+          timeout: 3s
+          retries: 20
+
   backend:
     build: ./backend                    # Construye con Dockerfile de backend/
     container_name: fs_backend
@@ -26,7 +32,9 @@ services:
     ports:
       - "8000:8000"                     # API accesible desde tu host
     depends_on:
-      - db                              # Arranca después de la DB
+      db:
+        condition: service_healthy  # Espera a que la DB esté OK
+      #- db                              # Arranca después de la DB
 
   frontend:
     image: node:20-bookworm               # Node debian para React + Vite
