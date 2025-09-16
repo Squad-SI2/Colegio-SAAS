@@ -21,7 +21,7 @@ export default defineConfig([
         ecmaFeatures: { jsx: true },
         sourceType: 'module',
       },
-    },  
+    },
     plugins: {
       prettier: eslintPluginPrettier,
     },

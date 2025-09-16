@@ -231,11 +231,7 @@ function HomePage() {
         <div className='mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-4'>
           <div>
             <div className='mb-4 flex items-center'>
-              <img
-                src='/logo.png'
-                alt={`${SYSTEM_NAME} logo`}
-                className='mr-2 h-8 w-auto'
-              />
+              <img src='/logo.png' alt={`${SYSTEM_NAME} logo`} className='mr-2 h-8 w-auto' />
               <span className='text-xl font-bold'>{SYSTEM_NAME}</span>
             </div>
             <p className='text-indigo-200'>
