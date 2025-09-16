@@ -6,3 +6,6 @@ djangorestframework==3.15.2
 psycopg2-binary==2.9.9
 sqlparse==0.5.3
 whitenoise==6.7.0
+django-tenants>=3.6
+djangorestframework-simplejwt>=5.3
+drf-spectacular>=0.27
