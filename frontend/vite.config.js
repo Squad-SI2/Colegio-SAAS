@@ -12,6 +12,9 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
+    watch: {
+      usePolling: true,
+    },
     proxy: {
       // Reenvía /api al backend por el nombre del servicio dentro de la red Docker
       '/api': {
