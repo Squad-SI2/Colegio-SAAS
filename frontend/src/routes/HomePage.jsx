@@ -23,7 +23,6 @@ function HomePage() {
           },
         ]}
       ></NavBar>
-      npm install --save-dev --save-exact prettier
       <header className='flex flex-col items-center justify-center px-4 py-16 text-center'>
         <h1 className='mb-6 text-4xl font-extrabold text-indigo-800 md:text-6xl'>
           Transforma la Gestión de tu Institución Educativa
