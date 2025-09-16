@@ -118,7 +118,7 @@ function Sidebar({ activeSection, setActiveSection }) {
   return (
     <div className='flex w-64 flex-col bg-indigo-800 text-white'>
       <div className='flex items-center p-4'>
-        <img src='/logo-colegio-saas.png' alt='Logo' className='mr-2 h-8 w-auto' />
+        <img src='/logo.png' alt='Logo' className='mr-2 h-8 w-auto' />
         <span className='text-xl font-bold'>Panel Admin</span>
       </div>
       <nav className='flex-1 overflow-y-auto pt-2'>

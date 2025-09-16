@@ -4,7 +4,7 @@ export default function NavBar({ routes }) {
   return (
     <nav className='flex items-center justify-between bg-white px-6 py-4 shadow-md'>
       <div className='flex items-center' id={SYSTEM_NAME}>
-        <img src='/logo-colegio-saas.png' alt='EduGestor Logo' className='mr-2 h-10 w-auto' />
+        <img src='/logo.png' alt='Logo' className='mr-2 h-10 w-auto' />
         <span className='text-xl font-bold text-indigo-700'>{SYSTEM_NAME}</span>
       </div>
       <div className='hidden space-x-8 md:flex'>

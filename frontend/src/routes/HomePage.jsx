@@ -232,7 +232,7 @@ function HomePage() {
           <div>
             <div className='mb-4 flex items-center'>
               <img
-                src='/logo-colegio-saas.png'
+                src='/logo.png'
                 alt={`${SYSTEM_NAME} logo`}
                 className='mr-2 h-8 w-auto'
               />
