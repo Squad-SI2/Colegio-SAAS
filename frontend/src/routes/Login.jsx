@@ -17,7 +17,7 @@ function Login() {
     <div className='flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-12 sm:px-6 lg:px-8'>
       <div className='w-full max-w-md space-y-8 rounded-xl bg-white p-10 shadow-lg'>
         <div>
-          <img className='mx-auto h-12 w-auto' src='/logo-colegio-saas.png' alt={SYSTEM_NAME} />
+          <img className='mx-auto h-12 w-auto' src='/logo.png' alt={SYSTEM_NAME} />
           <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>Iniciar sesión</h2>
           <p className='mt-2 text-center text-sm text-gray-600'>
             Accede a tu cuenta de {SYSTEM_NAME}
