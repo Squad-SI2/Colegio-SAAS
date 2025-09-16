@@ -1,7 +1,11 @@
 
 <div align="center" width="100">
-	<h1>:classical_building: :robot: :brain: PROYECTO FINAL SI2 SAAS  :brain: :robot: :classical_building:</h1>
+	<h1>:school: :calendar: :books:PROYECTO FINAL SI2  :books: :calendar: :school:</h1>
 </div>
+
+<p align="center">
+	Sistema de Gestion Academica para Colegios tipo SAAS
+</p>
 
 <!--
 <h3 align="center">
