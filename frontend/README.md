@@ -1,12 +1,11 @@
-# React + Vite
+# Web Frontend 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+<img width="978" height="891" alt="image" src="https://github.com/user-attachments/assets/6ea06f42-be3e-4d2a-b718-2943cdb31715" />
+<img width="914" height="827" alt="image" src="https://github.com/user-attachments/assets/c4f8a284-b88d-483c-83ba-642f91c4b312" />
+<img width="1355" height="887" alt="image" src="https://github.com/user-attachments/assets/7e35caf1-9031-4f30-8c33-b4769b9fc53d" />
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Dependencies: 
+- React
+- React Router
+- Tailwindcss
