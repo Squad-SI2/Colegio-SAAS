@@ -1,17 +1,17 @@
 import './index.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from './routes/HomePage';
 import Login from './routes/Login';
 import PanelAdmin from './routes/PanelAdmin';
 function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
         <Route path='/' element={<HomePage />} />
         <Route path='/login' element={<Login />} />
         <Route path='/panel-admin' element={<PanelAdmin />} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 
