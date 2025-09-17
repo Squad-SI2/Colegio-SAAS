@@ -1,9 +1,11 @@
+import { useNavigate } from 'react-router-dom';
+
 export default function PriceCard({ plan, price, description, features, isPopular }) {
+  const navigate = useNavigate();
   return (
     <div
       className={`relative flex max-w-sm flex-1 flex-col rounded-xl bg-white p-8 shadow-lg ${isPopular ? 'border-4 border-indigo-500 shadow-xl' : ''}`}
     >
-      {/* Badge de "MÁS POPULAR" (solo se muestra si isPopular es true) */}
       {isPopular && (
         <div className='absolute -top-4 left-1/2 -translate-x-1/2 transform'>
           <span className='rounded-full bg-indigo-500 px-4 py-1 text-sm font-bold text-white'>
@@ -42,8 +44,8 @@ export default function PriceCard({ plan, price, description, features, isPopula
         </ul>
       </div>
 
-      {/* Botón con color diferente según si es popular o no */}
       <button
+        onClick={() => navigate('/login')}
         className={`mt-4 w-full rounded-lg px-4 py-3 font-semibold transition ${
           isPopular
             ? 'bg-indigo-600 text-white hover:bg-indigo-700'
