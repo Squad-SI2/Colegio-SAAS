@@ -1,10 +1,10 @@
-import { SYSTEM_NAME } from './../constants/index';
+import { SYSTEM_NAME } from '../constants/index';
 import NavBar from '../components/NavBar';
 import FeatureCard from '../components/FeatureCard';
 import PriceCard from '../components/PriceCard';
 import TestimonialCard from '../components/TestimonialCard';
 
-function HomePage() {
+function LandingPage() {
   return (
     <main className='flex min-h-screen flex-col bg-gradient-to-br from-blue-50 to-indigo-100'>
       <NavBar
@@ -271,4 +271,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default LandingPage;

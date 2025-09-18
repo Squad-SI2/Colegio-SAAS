@@ -2,7 +2,7 @@ import { SYSTEM_NAME } from '../constants/index';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
-function SignUp() {
+function SignUpPage() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -120,4 +120,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default SignUpPage;

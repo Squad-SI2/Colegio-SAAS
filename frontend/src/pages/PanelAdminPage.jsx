@@ -12,7 +12,7 @@ import {
   DashboardContent,
 } from './content';
 
-export default function PanelAdmin() {
+export default function PanelAdminPage() {
   const [activeSection, setActiveSection] = useState('dashboard');
   const navigate = useNavigate();
 
