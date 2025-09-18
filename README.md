@@ -23,9 +23,14 @@ of programming and learning from each other along the way.
 </p>
 
 :rocket: Para iniciar:<br/>
-:green_circle: :one: CLONAR EL REPOSITORIO EN SU MAQUINA LOCAL<br/>
+:green_circle: :one: CLONAR REPOSITORIO COMPLETO / RAMA<br/>
 ```python
 git clone url-repositorio
+```
+
+
+```python
+git clone --single-branch --branch rama-especifica url-repositorio
 ```
 :green_circle: :two: CREARSE UN RAMA<br/>
 
