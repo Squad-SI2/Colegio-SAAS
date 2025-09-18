@@ -1,7 +1,8 @@
 # backend/academics/views.py
 from rest_framework import generics, permissions
-from .models import EducationLevel
-from .serializers import EducationLevelSerializer
+from .models import EducationLevel, AcademicPeriod
+from .serializers import EducationLevelSerializer, AcademicPeriodSerializer
+
 
 class IsStaffUser(permissions.BasePermission):
     """Solo staff puede escribir; lectura cualquiera autenticado."""
@@ -29,4 +30,15 @@ class EducationLevelDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = EducationLevel.objects.all()
     serializer_class = EducationLevelSerializer
+    permission_classes = [IsStaffUser]
+
+
+class AcademicPeriodListCreateView(generics.ListCreateAPIView):
+    queryset = AcademicPeriod.objects.all()
+    serializer_class = AcademicPeriodSerializer
+    permission_classes = [IsStaffUser]
+
+class AcademicPeriodDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = AcademicPeriod.objects.all()
+    serializer_class = AcademicPeriodSerializer
     permission_classes = [IsStaffUser]
