@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Plan, Client
+from .models import Plan, Client, Domain
 
 
 class PlanSerializer(serializers.ModelSerializer):
@@ -24,3 +24,14 @@ class ClientSerializer(serializers.ModelSerializer):
             "created_on",
         ]
         read_only_fields = ["id", "created_on"]
+
+class DomainSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Domain
+        fields = [
+            "id",
+            "domain",
+            "tenant",
+            "is_primary",
+        ]
+        read_only_fields = ["id"]

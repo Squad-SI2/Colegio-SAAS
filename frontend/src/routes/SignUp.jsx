@@ -2,7 +2,7 @@ import { SYSTEM_NAME } from '../constants/index';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
-function Login() {
+function SignUp() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -11,22 +11,20 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // try {
-    //   const response = await fetch(`api/v1/login/`, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({ username, email, password }),
-    //   });
+    // //   const response = await fetch(`api/v1/signup/`, {
+    // //     method: 'POST',
+    // //     headers: {
+    // //       'Content-Type': 'application/json',
+    // //     },
+    // //     body: JSON.stringify({ username, email, password }),
+    // //   });
 
-    //   if (response.ok) {
-    //     const data = await response.json();
-    //     console.log(data);
-    //     navigate('/panel-admin');
-    //   } else {
-    //     const data = await response.json();
-    //     alert('Error: ' + (data.error || 'No se pudo iniciar sesión'));
-    //   }
+    // //   if (response.ok) {
+    // //     navigate('/panel-admin');
+    // //   } else {
+    // //     const data = await response.json();
+    // //     alert('Error: ' + (data.error || 'No se pudo registrar'));
+    // //   }
     // } catch (error) {
     //   console.error('Error en SignUp:', error);
     // }
@@ -38,8 +36,8 @@ function Login() {
       <div className='w-full max-w-md space-y-8 rounded-xl bg-white p-10 shadow-lg'>
         <div>
           <img className='mx-auto h-12 w-auto' src='/logo.png' alt={SYSTEM_NAME} />
-          <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>Iniciar sesión</h2>
-          <p className='mt-2 text-center text-sm text-gray-600'>Inicia sesión en {SYSTEM_NAME}</p>
+          <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>Registrarse</h2>
+          <p className='mt-2 text-center text-sm text-gray-600'>Crea una cuenta de {SYSTEM_NAME}</p>
         </div>
         <form className='mt-8 space-y-6' onSubmit={handleSubmit}>
           <input type='hidden' name='remember' value='true' />
@@ -113,7 +111,7 @@ function Login() {
               type='submit'
               className='group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none'
             >
-              Iniciar sesión
+              Registrarse
             </button>
           </div>
         </form>
@@ -122,4 +120,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default SignUp;

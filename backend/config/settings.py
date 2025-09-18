@@ -54,7 +54,8 @@ INSTALLED_APPS = SHARED_APPS + TENANT_APPS
 
 # ========== Middleware ==========
 MIDDLEWARE = [
-    "django_tenants.middleware.main.TenantMainMiddleware",  # primero
+    "tenants.middleware_fixed.FixedTenantDevMiddleware",
+    #"django_tenants.middleware.main.TenantMainMiddleware",  # primero
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",           # estáticos en contenedor
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -163,3 +164,6 @@ CSRF_TRUSTED_ORIGINS = env.list(
 )
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+DEFAULT_TENANT_SCHEMA = env("DEFAULT_TENANT_SCHEMA", default=None)
+
