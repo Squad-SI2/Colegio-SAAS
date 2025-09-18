@@ -22,6 +22,10 @@ class EducationLevel(models.Model):
         return self.name
 
 class AcademicPeriod(models.Model):
+    """
+    Período académico (año lectivo, semestre, trimestre, etc.)
+    Vive en el esquema del colegio (TENANT_APPS).
+    """
     name = models.CharField(max_length=80, unique=True)
     start_date = models.DateField()
     end_date = models.DateField()
