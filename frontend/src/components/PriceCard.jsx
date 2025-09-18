@@ -45,7 +45,7 @@ export default function PriceCard({ plan, price, description, features, isPopula
       </div>
 
       <button
-        onClick={() => navigate('/login')}
+        onClick={() => navigate('/register-school')}
         className={`mt-4 w-full rounded-lg px-4 py-3 font-semibold transition ${
           isPopular
             ? 'bg-indigo-600 text-white hover:bg-indigo-700'

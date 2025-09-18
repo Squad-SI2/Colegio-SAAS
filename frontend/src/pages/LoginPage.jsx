@@ -2,7 +2,7 @@ import { SYSTEM_NAME } from '../constants/index';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
-function Login() {
+function LoginPage() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -122,4 +122,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginPage;

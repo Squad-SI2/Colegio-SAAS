@@ -1,18 +1,20 @@
 import './index.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import HomePage from './routes/HomePage';
-import Login from './routes/Login';
-import PanelAdmin from './routes/PanelAdmin';
-import SignUp from './routes/SignUp';
+import LandingPage from './pages/LandingPage';
+import LoginPage from './pages/LoginPage';
+import PanelAdminPage from './pages/PanelAdminPage';
+import SignUpPage from './pages/SignUpPage';
+import RegisterSchoolPage from './pages/RegisterSchoolPage';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<HomePage />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/signup' element={<SignUp />} />
-        <Route path='/panel-admin' element={<PanelAdmin />} />
+        <Route path='/' element={<LandingPage />} />
+        <Route path='/login' element={<LoginPage />} />
+        <Route path='/signup' element={<SignUpPage />} />
+        <Route path='/register-school' element={<RegisterSchoolPage />} />
+        <Route path='/panel-admin' element={<PanelAdminPage />} />
       </Routes>
     </BrowserRouter>
   );
