@@ -1,9 +1,9 @@
 import './index.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import HomePage from './routes/HomePage';
-import Login from './routes/Login';
-import PanelAdmin from './routes/PanelAdmin';
-import SignUp from './routes/SignUp';
+import HomePage from './pages/HomePage';
+import Login from './pages/Login';
+import PanelAdmin from './pages/PanelAdmin';
+import SignUp from './pages/SignUp';
 
 function App() {
   return (
