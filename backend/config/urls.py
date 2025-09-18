@@ -9,6 +9,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
+
+
 urlpatterns = [
     path("admin/", admin.site.urls),
 
@@ -22,7 +24,11 @@ urlpatterns = [
     path("api/", include("academics.urls")),  # estudiantes, calificaciones, asistencia
     path("api/", include("comms.urls")),      # mensajería básica
     path("api/", include("payments.urls")),   # pagos internos del colegio
+    path("api/", include("core.urls")),       # healthchecks
+
 ]
+
+
 
 # Servir archivos media en desarrollo
 if settings.DEBUG:
