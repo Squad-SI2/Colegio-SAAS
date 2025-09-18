@@ -162,3 +162,39 @@ class Student(models.Model):
 
     def __str__(self):
         return f"{self.code} - {self.person}"
+
+class Enrollment(models.Model):
+    """
+    Matrícula del estudiante en un período, grado y sección.
+    Reglas base:
+    - Un estudiante no puede tener dos matrículas en el mismo período.
+    """
+    STATUS_CHOICES = [
+        ("ACTIVE", "Activa"),
+        ("WITHDRAWN", "Retiro"),
+        ("TRANSFERRED", "Transferido"),
+        ("FINISHED", "Finalizada"),
+    ]
+
+    student = models.ForeignKey("academics.Student", on_delete=models.PROTECT, related_name="enrollments")
+    period = models.ForeignKey("academics.AcademicPeriod", on_delete=models.PROTECT, related_name="enrollments")
+    grade = models.ForeignKey("academics.Grade", on_delete=models.PROTECT, related_name="enrollments")
+    section = models.ForeignKey("academics.Section", on_delete=models.PROTECT, related_name="enrollments")
+
+    status = models.CharField(max_length=12, choices=STATUS_CHOICES, default="ACTIVE")
+    enroll_date = models.DateField(auto_now_add=True)
+    notes = models.TextField(blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        unique_together = [("student", "period")]  # 1 matrícula por período
+        indexes = [
+            models.Index(fields=["student", "period"]),
+            models.Index(fields=["grade", "section"]),
+        ]
+
+    def __str__(self):
+        return f"{self.student.code} @ {self.period.name} - {self.grade.name}/{self.section.name}"

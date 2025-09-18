@@ -3,7 +3,8 @@ from django.urls import path
 from .views import (EducationLevelListCreateView, EducationLevelDetailView,AcademicPeriodListCreateView, 
                     AcademicPeriodDetailView, GradeListCreateView, GradeDetailView,
                     SectionListCreateView, SectionDetailView, SubjectListCreateView, SubjectDetailView,
-                    PersonListCreateView, PersonDetailView, StudentListCreateView, StudentDetailView) 
+                    PersonListCreateView, PersonDetailView, StudentListCreateView, StudentDetailView,
+                    EnrollmentListCreateView, EnrollmentDetailView) 
 
 urlpatterns = [
     # Education Levels
@@ -33,5 +34,9 @@ urlpatterns = [
     # Students
     path("students", StudentListCreateView.as_view()),
     path("students/<int:pk>", StudentDetailView.as_view()),
+
+    # Enrollments
+    path("enrollments", EnrollmentListCreateView.as_view()),
+    path("enrollments/<int:pk>", EnrollmentDetailView.as_view()),
 
 ]

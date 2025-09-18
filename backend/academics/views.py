@@ -1,8 +1,10 @@
 # backend/academics/views.py
 from rest_framework import generics, permissions
-from .models import (EducationLevel, AcademicPeriod, Grade, Section, Subject, Person, Student)
+from .models import (EducationLevel, AcademicPeriod, Grade, Section, Subject, Person, Student,
+                     Enrollment)
 from .serializers import (EducationLevelSerializer, AcademicPeriodSerializer, GradeSerializer,
-                          SectionSerializer, SubjectSerializer, PersonSerializer, StudentSerializer)
+                          SectionSerializer, SubjectSerializer, PersonSerializer, StudentSerializer,
+                          EnrollmentSerializer)
 
 
 class IsStaffUser(permissions.BasePermission):
@@ -156,4 +158,43 @@ class StudentListCreateView(generics.ListCreateAPIView):
 class StudentDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.select_related("person").all()
     serializer_class = StudentSerializer
+    permission_classes = [IsStaffUser]
+
+class EnrollmentListCreateView(generics.ListCreateAPIView):
+    queryset = (Enrollment.objects
+                .select_related("student", "student__person", "period", "grade", "section")
+                .all())
+    serializer_class = EnrollmentSerializer
+    permission_classes = [IsStaffUser]
+
+    # Filtros: ?student=<id>  ?period=<id>  ?grade=<id>  ?section=<id>  ?status=<str>  ?q=<texto>
+    def get_queryset(self):
+        qs = super().get_queryset()
+        p = self.request.query_params
+        if p.get("student"):
+            qs = qs.filter(student_id=p["student"])
+        if p.get("period"):
+            qs = qs.filter(period_id=p["period"])
+        if p.get("grade"):
+            qs = qs.filter(grade_id=p["grade"])
+        if p.get("section"):
+            qs = qs.filter(section_id=p["section"])
+        if p.get("status"):
+            qs = qs.filter(status=p["status"])
+        q = p.get("q")
+        if q:
+            q = q.strip()
+            qs = qs.filter(
+                models.Q(student__code__icontains=q) |
+                models.Q(student__person__first_name__icontains=q) |
+                models.Q(student__person__last_name__icontains=q)
+            )
+        return qs
+
+
+class EnrollmentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = (Enrollment.objects
+                .select_related("student", "student__person", "period", "grade", "section")
+                .all())
+    serializer_class = EnrollmentSerializer
     permission_classes = [IsStaffUser]
