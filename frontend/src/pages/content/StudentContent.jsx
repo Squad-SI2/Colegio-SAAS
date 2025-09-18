@@ -131,24 +131,6 @@ function StudentsContent() {
 
   return (
     <div>
-      <div className='mt-6 grid grid-cols-1 gap-4 md:grid-cols-3'>
-        <div className='rounded-lg bg-white p-4 shadow'>
-          <div className='text-sm font-medium text-gray-500'>Total Estudiantes</div>
-          <div className='text-2xl font-bold text-indigo-600'>{students.length}</div>
-        </div>
-        <div className='rounded-lg bg-white p-4 shadow'>
-          <div className='text-sm font-medium text-gray-500'>Estudiantes Activos</div>
-          <div className='text-2xl font-bold text-green-600'>
-            {students.filter((s) => s.status === 'Activo').length}
-          </div>
-        </div>
-        <div className='rounded-lg bg-white p-4 shadow'>
-          <div className='text-sm font-medium text-gray-500'>Estudiantes Inactivos</div>
-          <div className='text-2xl font-bold text-red-600'>
-            {students.filter((s) => s.status === 'Inactivo').length}
-          </div>
-        </div>
-      </div>
       <div className='mb-6 flex items-center justify-between'>
         <h2 className='text-2xl font-semibold text-gray-800'>Gestión de Estudiantes</h2>
         <button
