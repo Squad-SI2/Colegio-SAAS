@@ -18,12 +18,20 @@ export default function NavBar({ routes }) {
           </a>
         ))}
       </div>
-      <a
-        href='/login'
-        className='rounded-lg bg-indigo-600 px-4 py-2 text-white shadow transition hover:bg-indigo-700'
-      >
-        Iniciar sesión
-      </a>
+      <div className='flex gap-2'>
+        <a
+          href='/login'
+          className='rounded-lg bg-indigo-600 px-4 py-2 text-white shadow transition hover:bg-indigo-700'
+        >
+          Iniciar sesión
+        </a>
+        <a
+          href='/signup'
+          className='rounded-lg bg-gray-200 px-4 py-2 text-black shadow transition hover:bg-gray-400'
+        >
+          Registrarse
+        </a>
+      </div>
     </nav>
   );
 }

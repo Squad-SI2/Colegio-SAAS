@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const menuItems = [
   {
@@ -117,10 +118,12 @@ function Sidebar({ activeSection, setActiveSection }) {
 
   return (
     <div className='flex w-64 flex-col bg-indigo-800 text-white'>
-      <div className='flex items-center p-4'>
-        <img src='/logo.png' alt='Logo' className='mr-2 h-8 w-auto' />
-        <span className='text-xl font-bold'>Panel Admin</span>
-      </div>
+      <Link to='/'>
+        <div className='flex items-center p-4'>
+          <img src='/logo.png' alt='Logo' className='mr-2 h-8 w-auto' />
+          <span className='text-xl font-bold'>Panel Admin</span>
+        </div>
+      </Link>
       <Menu
         activeSection={activeSection}
         setActiveSection={setActiveSection}
