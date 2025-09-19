@@ -25,12 +25,12 @@ of programming and learning from each other along the way.
 :rocket: Para iniciar:<br/>
 :green_circle: :one: CLONAR REPOSITORIO COMPLETO / RAMA<br/>
 ```python
-git clone url-repositorio
+git clone git@github.com:Squad-SI2/Colegio-SAAS.git
 ```
 
 
 ```python
-git clone --single-branch --branch rama-especifica url-repositorio
+git clone --single-branch --branch rama-especifica git@github.com:Squad-SI2/Colegio-SAAS.git
 ```
 :green_circle: :two: CREARSE UN RAMA<br/>
 
