@@ -10,25 +10,25 @@ function SignUpPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // try {
-    // //   const response = await fetch(`api/v1/signup/`, {
-    // //     method: 'POST',
-    // //     headers: {
-    // //       'Content-Type': 'application/json',
-    // //     },
-    // //     body: JSON.stringify({ username, email, password }),
-    // //   });
+    try {
+      const response = await fetch(`api/auth/register/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: username, email, password, role: 'EST' }),
+      });
 
-    // //   if (response.ok) {
-    // //     navigate('/panel-admin');
-    // //   } else {
-    // //     const data = await response.json();
-    // //     alert('Error: ' + (data.error || 'No se pudo registrar'));
-    // //   }
-    // } catch (error) {
-    //   console.error('Error en SignUp:', error);
-    // }
-    navigate('/panel-admin');
+      if (response.ok) {
+        navigate('/panel-admin');
+      } else {
+        const data = await response.json();
+        alert('Error: ' + (data.error || 'No se pudo registrar'));
+      }
+    } catch (error) {
+      console.error('Error en SignUp:', error);
+    }
+    // navigate('/panel-admin');
   };
 
   return (
