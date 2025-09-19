@@ -13,7 +13,17 @@ class RegisterView(APIView):
     serializer = UserSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
-    return Response(serializer.data)
+
+    payload = {
+      'id': serializer.data['id'],
+      'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+    }
+
+    token = jwt.encode(payload, 'secret', algorithm='HS256')
+    response = Response()
+    response.set_cookie(key='jwt', value=token, httponly=True)
+    response.data = serializer.data 
+    return response 
 
 
 class LoginView(APIView):
@@ -22,8 +32,6 @@ class LoginView(APIView):
     password = request.data["password"]
 
     user = User.objects.filter(email=email).first()
-    # contraseña cifrada
-    
 
     if user is None:
       raise AuthenticationFailed("User not found!")
