@@ -38,6 +38,7 @@ class User(AbstractUser):
     - Sin 'username'.
     """
     username = None  # deshabilitamos username
+    name = models.CharField(max_length=150, default="user")
     email = models.EmailField(unique=True)
 
     ROLE_CHOICES = [
