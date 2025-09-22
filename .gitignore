@@ -27,3 +27,6 @@ dist/
 
 # Docker
 *.local.yml
+
+**/migrations/*
+!**/migrations/__init__.py
