@@ -16,6 +16,20 @@ export default function PanelAdminPage() {
   const [activeSection, setActiveSection] = useState('dashboard');
   const navigate = useNavigate();
 
+  const handleLogOut = () => {
+    fetch('api/auth/logout/', { method: 'POST', credentials: 'include' })
+      .then((response) => {
+        if (response.ok) {
+          navigate('/login');
+        } else {
+          alert('Error al cerrar sesión');
+        }
+      })
+      .catch((error) => {
+        console.error('Error al cerrar sesión:', error);
+      });
+  };
+
   const renderContent = () => {
     switch (activeSection) {
       case 'dashboard':
@@ -49,7 +63,7 @@ export default function PanelAdminPage() {
             <div className='flex items-center'>
               <span className='mr-4 text-gray-700'>Bienvenido, Admin</span>
               <button
-                onClick={() => navigate('/login')}
+                onClick={handleLogOut}
                 className='rounded-lg bg-indigo-600 px-4 py-2 text-white transition hover:bg-indigo-700'
               >
                 Cerrar sesión

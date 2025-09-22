@@ -3,34 +3,32 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 function LoginPage() {
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // try {
-    //   const response = await fetch(`api/v1/login/`, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({ username, email, password }),
-    //   });
+    try {
+      const response = await fetch(`api/auth/login/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    //   if (response.ok) {
-    //     const data = await response.json();
-    //     console.log(data);
-    //     navigate('/panel-admin');
-    //   } else {
-    //     const data = await response.json();
-    //     alert('Error: ' + (data.error || 'No se pudo iniciar sesión'));
-    //   }
-    // } catch (error) {
-    //   console.error('Error en SignUp:', error);
-    // }
-    navigate('/panel-admin');
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        navigate('/panel-admin');
+      } else {
+        const data = await response.json();
+        alert('Error: ' + (data.error || 'No se pudo iniciar sesión'));
+      }
+    } catch (error) {
+      console.error('Error en SignUp:', error);
+    }
   };
 
   return (
@@ -44,22 +42,6 @@ function LoginPage() {
         <form className='mt-8 space-y-6' onSubmit={handleSubmit}>
           <input type='hidden' name='remember' value='true' />
           <div className='-space-y-px rounded-md shadow-sm'>
-            <div>
-              <label htmlFor='username' className='sr-only'>
-                Usuario
-              </label>
-              <input
-                onChange={(e) => setUsername(e.target.value)}
-                value={username}
-                id='username'
-                name='username'
-                type='text'
-                autoComplete='username'
-                required
-                className='relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none sm:text-sm'
-                placeholder='Usuario'
-              />
-            </div>
             <div>
               <label htmlFor='email-address' className='sr-only'>
                 Correo electrónico
