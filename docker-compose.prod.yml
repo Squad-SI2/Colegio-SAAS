@@ -17,28 +17,34 @@ services:
           interval: 5s
           timeout: 3s
           retries: 20
-    networks:
-      - mi_red
 
+  #Servicio para el backend
   serv-backend:
-    build: ./backend                    # Construye con Dockerfile de backend/
-    container_name: fs_backend          # Nombre del contenedor
-    env_file: .env                      # Carga variables de entorno
-    user: "${UID:-1000}:${GID:-1000}"   # En linux/WSL evita archivos creados como root
-    command: /bin/sh -lc "./entrypoint.sh"
+    build:
+      context: ./backend #solo cuando se usa dockerfile
+    container_name: backend
+    restart: always
+    ports:
+      - "8000:8000"  # Exponer el puerto del backend
+    env_file:
+      - .env  # Cargar variables de entorno desde el archivo .env
+    #Para produccion no usar volumen ni command.
     volumes:
-      - ./backend:/app                  # Hot-reload: tu código ↔ contenedor
+      - ./backend:/app  # Monta el código fuente para hot reload
       - backend_static:/app/staticfiles # Estaticos recopilados
       - backend_media:/app/media        # Archivos subidos
-    ports:
-      - "8000:8000"                     # Puerto host : puerto predeterminado Django
+    working_dir: /app
+    command: /bin/sh -lc "./entrypoint.sh"
     networks:
       - mi_red  # Conectar a la misma red para que se puedan comunicar
+    stdin_open: true  # Mantener la terminal abierta para interaccion
+    tty: true  # Mantener el contenedor en modo terminal para que funcione el hot reload
     depends_on:
       db:
         condition: service_healthy      # Espera a que la DB este OK
 
 
+  #Servicio para el frontend (React)
   serv-frontend:
     build:
       context: ./frontend
@@ -59,13 +65,11 @@ services:
     networks:
       - mi_red
 
+
 volumes:
-  pgdata:
-  backend_static:
-  backend_media:
   node_modules_frontend:
 
+# Declaracion de redes
 networks:
-  mi_red:
+  mi_red:  # Declaramos una red personalizada llamada "mi_red"
     driver: bridge
-
