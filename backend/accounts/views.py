@@ -8,7 +8,7 @@ import jwt
 import datetime
 now = datetime.datetime.now()
 
-class RegisterView(APIView):
+class SignUpView(APIView):
   def post(self, request):
     serializer = UserSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)

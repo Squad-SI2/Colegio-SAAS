@@ -11,12 +11,13 @@ function SignUpPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`api/auth/register/`, {
+      const response = await fetch(`api/auth/signup/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: username, email, password, role: 'EST' }),
+        credentials: 'include',
+        body: JSON.stringify({ name: username, email, password, role: 'ADMIN' }),
       });
 
       if (response.ok) {
