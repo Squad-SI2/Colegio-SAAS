@@ -18,7 +18,7 @@ export default defineConfig({
     proxy: {
       // Reenvía /api al backend por el nombre del servicio dentro de la red Docker
       '/api': {
-        target: 'http://backend:8000',
+        target: 'http://serv-backend:8000',
         changeOrigin: true,
         secure: false,
       },
