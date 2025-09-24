@@ -20,6 +20,8 @@ export default function PanelAdminPage() {
     fetch('api/auth/logout/', { method: 'POST', credentials: 'include' })
       .then((response) => {
         if (response.ok) {
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
           navigate('/login');
         } else {
           alert('Error al cerrar sesión');

@@ -120,7 +120,7 @@ function Sidebar({ activeSection, setActiveSection }) {
     <div className='flex w-64 flex-col bg-indigo-800 text-white'>
       <Link to='/'>
         <div className='flex items-center p-4'>
-          <img src='/logo.png' alt='Logo' className='mr-2 h-8 w-auto' />
+          <img src='/images/logo.png' alt='Logo' className='mr-2 h-8 w-auto' />
           <span className='text-xl font-bold'>Panel Admin</span>
         </div>
       </Link>

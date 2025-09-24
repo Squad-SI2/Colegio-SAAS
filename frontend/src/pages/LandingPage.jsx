@@ -171,13 +171,6 @@ function LandingPage() {
               isPopular={false}
             />
           </div>
-
-          <p className='mt-8 text-center text-gray-500'>
-            ¿Necesitas un plan personalizado?{' '}
-            <a href='#contact' className='text-indigo-600 hover:underline'>
-              Contáctanos
-            </a>
-          </p>
         </div>
       </section>
       <section id='testimonials' className='bg-white px-4 py-16'>
@@ -231,7 +224,7 @@ function LandingPage() {
         <div className='mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-4'>
           <div>
             <div className='mb-4 flex items-center'>
-              <img src='/logo.png' alt={`${SYSTEM_NAME} logo`} className='mr-2 h-8 w-auto' />
+              <img src='/images/logo.png' alt={`${SYSTEM_NAME} logo`} className='mr-2 h-8 w-auto' />
               <span className='text-xl font-bold'>{SYSTEM_NAME}</span>
             </div>
             <p className='text-indigo-200'>
