@@ -25,6 +25,7 @@ class ClientSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["id", "created_on"]
 
+
 class DomainSerializer(serializers.ModelSerializer):
     class Meta:
         model = Domain

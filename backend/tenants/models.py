@@ -4,7 +4,9 @@ from django_tenants.models import TenantMixin, DomainMixin
 
 class Plan(models.Model):
     name = models.CharField(max_length=50)
-    period = models.CharField(max_length=1, choices=[("M", "Mensual"), ("Y", "Anual")], default="M")
+    period = models.CharField(
+        max_length=1, choices=[("M", "Mensual"), ("Y", "Anual")], default="M"
+    )
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     currency = models.CharField(max_length=8, default="BOB")
     max_users = models.IntegerField(default=50)
@@ -17,7 +19,9 @@ class Plan(models.Model):
 
 
 class Client(TenantMixin):  # Colegio / Tenant
-    schema_name = models.CharField(max_length=63, unique=True)  # requerido por django-tenants
+    schema_name = models.CharField(
+        max_length=63, unique=True
+    )  # requerido por django-tenants
     legal_name = models.CharField(max_length=150)
     code = models.CharField(max_length=32, unique=True)
     official_email = models.EmailField()

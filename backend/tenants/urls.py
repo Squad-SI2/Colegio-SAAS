@@ -1,5 +1,11 @@
 from django.urls import path
-from .views import PlanCreateView, ClientCreateView, ClientDetailView, DomainCreateView, DomainListView
+from .views import (
+    PlanCreateView,
+    ClientCreateView,
+    ClientDetailView,
+    DomainCreateView,
+    DomainListView,
+)
 
 urlpatterns = [
     path("plans", PlanCreateView.as_view(), name="plan_create"),

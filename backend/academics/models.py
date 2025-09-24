@@ -2,11 +2,13 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 
+
 class EducationLevel(models.Model):
     """
     Catálogo por tenant: Nivel educativo (Inicial, Primaria, Secundaria, etc.)
     Vive en el esquema del colegio (TENANT_APPS).
     """
+
     name = models.CharField(max_length=80, unique=True)  # único por tenant
     short_name = models.CharField(max_length=20, blank=True)
     is_active = models.BooleanField(default=True)
@@ -21,11 +23,13 @@ class EducationLevel(models.Model):
     def __str__(self):
         return self.name
 
+
 class AcademicPeriod(models.Model):
     """
     Período académico (año lectivo, semestre, trimestre, etc.)
     Vive en el esquema del colegio (TENANT_APPS).
     """
+
     name = models.CharField(max_length=80, unique=True)
     start_date = models.DateField()
     end_date = models.DateField()
@@ -48,9 +52,12 @@ class AcademicPeriod(models.Model):
 
 class Grade(models.Model):
     """Grado/Curso dentro de un nivel educativo (1ro, 2do, etc.)."""
-    level = models.ForeignKey("academics.EducationLevel", on_delete=models.PROTECT, related_name="grades")
-    name = models.CharField(max_length=80)           # "Primero", "Segundo", etc.
-    order = models.PositiveIntegerField(default=1)   # para ordenar
+
+    level = models.ForeignKey(
+        "academics.EducationLevel", on_delete=models.PROTECT, related_name="grades"
+    )
+    name = models.CharField(max_length=80)  # "Primero", "Segundo", etc.
+    order = models.PositiveIntegerField(default=1)  # para ordenar
     is_active = models.BooleanField(default=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -67,9 +74,12 @@ class Grade(models.Model):
 
 class Section(models.Model):
     """Paralelo/sección de un grado (A, B, C...)."""
-    grade = models.ForeignKey("academics.Grade", on_delete=models.PROTECT, related_name="sections")
-    name = models.CharField(max_length=20)             # "A", "B", "C"...
-    capacity = models.PositiveIntegerField(default=30) # cupo recomendado
+
+    grade = models.ForeignKey(
+        "academics.Grade", on_delete=models.PROTECT, related_name="sections"
+    )
+    name = models.CharField(max_length=20)  # "A", "B", "C"...
+    capacity = models.PositiveIntegerField(default=30)  # cupo recomendado
     is_active = models.BooleanField(default=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -77,21 +87,26 @@ class Section(models.Model):
 
     class Meta:
         ordering = ["grade__level__name", "grade__order", "grade__name", "name"]
-        unique_together = [("grade", "name")]  # no repetir "A" dos veces en el mismo grado
+        unique_together = [
+            ("grade", "name")
+        ]  # no repetir "A" dos veces en el mismo grado
         indexes = [
             models.Index(fields=["grade", "name"]),
         ]
 
     def __str__(self):
         return f"{self.grade} - {self.name}"
-    
+
 
 class Subject(models.Model):
     """
     Materia/Asignatura. Para Sprint 1 la ligamos al nivel educativo.
     Vive en el esquema del colegio (TENANT_APPS).
     """
-    level = models.ForeignKey("academics.EducationLevel", on_delete=models.PROTECT, related_name="subjects")
+
+    level = models.ForeignKey(
+        "academics.EducationLevel", on_delete=models.PROTECT, related_name="subjects"
+    )
     name = models.CharField(max_length=120)
     short_name = models.CharField(max_length=30, blank=True)
     is_active = models.BooleanField(default=True)
@@ -110,14 +125,16 @@ class Subject(models.Model):
     def __str__(self):
         return f"{self.level.short_name or self.level.name} - {self.name}"
 
+
 class Person(models.Model):
     """
     Datos base de una persona (comunes a estudiante, docente, apoderado).
     Vive en el esquema del colegio (TENANT_APPS).
     """
+
     first_name = models.CharField(max_length=80)
     last_name = models.CharField(max_length=120)
-    doc_type = models.CharField(max_length=20, blank=True)      # CI, PAS, etc.
+    doc_type = models.CharField(max_length=20, blank=True)  # CI, PAS, etc.
     doc_number = models.CharField(max_length=40, blank=True)
     email = models.EmailField(blank=True)
     phone = models.CharField(max_length=30, blank=True)
@@ -145,7 +162,10 @@ class Student(models.Model):
     Rol estudiante: referencia a Person + campos propios.
     Vive en el esquema del colegio (TENANT_APPS).
     """
-    person = models.OneToOneField("academics.Person", on_delete=models.PROTECT, related_name="student")
+
+    person = models.OneToOneField(
+        "academics.Person", on_delete=models.PROTECT, related_name="student"
+    )
     code = models.CharField(max_length=30, unique=True)  # código interno del alumno
     admission_date = models.DateField(null=True, blank=True)
     notes = models.TextField(blank=True)
@@ -163,12 +183,14 @@ class Student(models.Model):
     def __str__(self):
         return f"{self.code} - {self.person}"
 
+
 class Enrollment(models.Model):
     """
     Matrícula del estudiante en un período, grado y sección.
     Reglas base:
     - Un estudiante no puede tener dos matrículas en el mismo período.
     """
+
     STATUS_CHOICES = [
         ("ACTIVE", "Activa"),
         ("WITHDRAWN", "Retiro"),
@@ -176,10 +198,18 @@ class Enrollment(models.Model):
         ("FINISHED", "Finalizada"),
     ]
 
-    student = models.ForeignKey("academics.Student", on_delete=models.PROTECT, related_name="enrollments")
-    period = models.ForeignKey("academics.AcademicPeriod", on_delete=models.PROTECT, related_name="enrollments")
-    grade = models.ForeignKey("academics.Grade", on_delete=models.PROTECT, related_name="enrollments")
-    section = models.ForeignKey("academics.Section", on_delete=models.PROTECT, related_name="enrollments")
+    student = models.ForeignKey(
+        "academics.Student", on_delete=models.PROTECT, related_name="enrollments"
+    )
+    period = models.ForeignKey(
+        "academics.AcademicPeriod", on_delete=models.PROTECT, related_name="enrollments"
+    )
+    grade = models.ForeignKey(
+        "academics.Grade", on_delete=models.PROTECT, related_name="enrollments"
+    )
+    section = models.ForeignKey(
+        "academics.Section", on_delete=models.PROTECT, related_name="enrollments"
+    )
 
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default="ACTIVE")
     enroll_date = models.DateField(auto_now_add=True)

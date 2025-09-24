@@ -4,13 +4,15 @@ from django.http import HttpResponseServerError, HttpResponseBadRequest
 from django_tenants.utils import get_tenant_model
 
 PUBLIC_PATH_PREFIXES = (
-    "/admin",           # admin de Django
-    "/api/auth",        # JWT (token/refresh)
-    "/api/health",      # health público
-    "/api/schema", "/api/docs",
-    "/api/plans",       # crear planes desde public
-    "/api/tenants",     # crear Client (tenant) desde public
+    "/admin",  # admin de Django
+    "/api/auth",  # JWT (token/refresh)
+    "/api/health",  # health público
+    "/api/schema",
+    "/api/docs",
+    "/api/plans",  # crear planes desde public
+    "/api/tenants",  # crear Client (tenant) desde public
 )
+
 
 def _pick_default_tenant():
     Tenant = get_tenant_model()
@@ -22,6 +24,7 @@ def _pick_default_tenant():
             return None
     return Tenant.objects.filter(is_active=True).order_by("id").first()
 
+
 class FixedTenantDevMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
@@ -29,7 +32,7 @@ class FixedTenantDevMiddleware:
     def __call__(self, request):
         Tenant = get_tenant_model()
 
-         # 1) Si aún no hay tenants, o la ruta es pública -> no fijes tenant (usa 'public')
+        # 1) Si aún no hay tenants, o la ruta es pública -> no fijes tenant (usa 'public')
         if not Tenant.objects.exists() or request.path.startswith(PUBLIC_PATH_PREFIXES):
             return self.get_response(request)
 
