@@ -1,9 +1,24 @@
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/services/api_client.dart';
+import '../../core/constants/api_endpoints.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepository {
   static Future<bool> login(String email, String password) async {
-    final response = await ApiClient.post("/auth/token/", {
+    //  ByPass solo para pruebas
+  if (email == "estudiante@gmail.com" && password == "123456") {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("role", "student");
+    await prefs.setInt("user_id", 1);
+    return true;
+  }
+  if (email == "padre@gmail.com" && password == "123456") {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("role", "parent");
+    await prefs.setInt("user_id", 1);
+    return true;
+  }// Fin ByPass 
+
+    final response = await ApiClient.post(ApiEndpoints.login, {
       "email": email,
       "password": password,
     });
@@ -12,12 +27,6 @@ class AuthRepository {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString("access_token", response["access"]);
       await prefs.setString("refresh_token", response["refresh"]);
-
-      // 👇 Si el backend devuelve también el rol o perfil
-      if (response["role"] != null) {
-        await prefs.setString("role", response["role"]);
-      }
-
       return true;
     }
     return false;
