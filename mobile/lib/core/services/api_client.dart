@@ -3,7 +3,9 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiClient {
-  static const String baseUrl = "http://localhost:8000/api"; 
+  static const String baseUrl = "http://54.196.207.31:5173/"; 
+  
+  //   
   //  http://10.0.2.2:8000/api
   //  Android Emulator usa 10.0.2.2
   //  Chrome/Web y Windows usan http://localhost:8000/api
