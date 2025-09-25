@@ -14,6 +14,6 @@ urlpatterns = [
 ]
 
 
-urlpatterns += [
-    path("api/whereami", whereami_public),  # <- SOLO en public_urls
-]
+# urlpatterns += [
+#     path("api/whereami", whereami_public),  # <- SOLO en public_urls
+# ]
