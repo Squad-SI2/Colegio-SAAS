@@ -48,12 +48,12 @@ export default function RegisterSchoolPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    schema_name: '',
-    legal_name: '',
-    code: '',
-    official_email: '',
-    official_phone: '',
-    address: '',
+    schema_name: 'colegio_101',
+    legal_name: 'Colegio Santa Fe',
+    code: 'SF-2025',
+    official_email: 'infor@santafe.edu.bo',
+    official_phone: '70000000',
+    address: 'Calle 1 #123',
     is_active: true,
     plan: '1',
   });
