@@ -4,18 +4,7 @@ import NavBar from '../components/NavBar';
 import FeatureCard from '../components/FeatureCard';
 import PriceCard from '../components/PriceCard';
 import TestimonialCard from '../components/TestimonialCard';
-
-async function getPlans() {
-  try {
-    const response = await fetch('api/plans');
-    if (!response.ok) {
-      throw new Error('Error al cargar los planes');
-    }
-    return await response.json();
-  } catch (error) {
-    console.error(error);
-  }
-}
+import { server } from '../utils/getServer';
 
 function LandingPage() {
   const [plans, setPlans] = useState([]);
@@ -25,7 +14,7 @@ function LandingPage() {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const data = await getPlans();
+        const data = await server().getPlanes();
         setPlans(data);
       } catch (err) {
         setError(err.message);
