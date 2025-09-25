@@ -7,4 +7,4 @@ export { default as SubjectsContent } from './SubjectsContent';
 export { default as PersonsContent } from './PersonsContent';
 export { default as StudentsContent } from './StudentsContent';
 export { default as EnrollmentsContent } from './EnrollmentsContent';
-export { default as ReportsContent } from './ReportsContent';
+// export { default as ReportsContent } from './ReportsContent';
