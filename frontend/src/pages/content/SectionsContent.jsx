@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import DataTable from '../../components/DataTable';
 
-export default function GradesContent() {
-  const [grades, setGrades] = useState([]);
-  const [levels, setLevels] = useState([]);
+export default function SectionsContent() {
+  const [sections, setSections] = useState([]);
 
   const columns = [
-    { key: 'level_name', title: 'Nivel Educativo' },
-    { key: 'name', title: 'Grado' },
-    { key: 'order', title: 'Orden' },
+    { key: 'level_name', title: 'Nivel' },
+    { key: 'grade_name', title: 'Grado' },
+    { key: 'name', title: 'Sección' },
+    { key: 'capacity', title: 'Capacidad' },
     {
       key: 'is_active',
       title: 'Estado',
@@ -25,29 +25,32 @@ export default function GradesContent() {
   ];
 
   // Datos de ejemplo
-  const mockGrades = [
+  const mockSections = [
     {
       id: 1,
-      level: 1,
+      grade: 1,
       level_name: 'Primaria',
-      name: 'Primero',
-      order: 1,
+      grade_name: 'Primero',
+      name: 'A',
+      capacity: 30,
       is_active: true,
     },
     {
       id: 2,
-      level: 1,
+      grade: 1,
       level_name: 'Primaria',
-      name: 'Segundo',
-      order: 2,
+      grade_name: 'Primero',
+      name: 'B',
+      capacity: 28,
       is_active: true,
     },
     {
       id: 3,
-      level: 2,
-      level_name: 'Secundaria',
-      name: 'Primero',
-      order: 1,
+      grade: 2,
+      level_name: 'Primaria',
+      grade_name: 'Segundo',
+      name: 'A',
+      capacity: 32,
       is_active: true,
     },
   ];
@@ -55,10 +58,10 @@ export default function GradesContent() {
   return (
     <div>
       <div className='mb-6 flex items-center justify-between'>
-        <h2 className='text-2xl font-semibold'>Grados/Cursos</h2>
-        <button className='rounded-lg bg-indigo-600 px-4 py-2 text-white'>+ Nuevo Grado</button>
+        <h2 className='text-2xl font-semibold'>Secciones/Paralelos</h2>
+        <button className='rounded-lg bg-indigo-600 px-4 py-2 text-white'>+ Nueva Sección</button>
       </div>
-      <DataTable columns={columns} data={mockGrades} />
+      <DataTable columns={columns} data={mockSections} />
     </div>
   );
 }

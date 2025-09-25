@@ -1,15 +1,19 @@
+// pages/PanelAdminPage.js
 import { useState } from 'react';
 import Sidebar from '../components/SideBar';
 import { SYSTEM_NAME } from '../constants/index';
 import { useNavigate } from 'react-router-dom';
 import {
-  StudentsContent,
-  TeachersContent,
-  CoursesContent,
-  GradesContent,
-  ReportsContent,
-  SettingsContent,
   DashboardContent,
+  LevelsContent,
+  PeriodsContent,
+  GradesContent,
+  SectionsContent,
+  SubjectsContent,
+  PersonsContent,
+  StudentsContent,
+  EnrollmentsContent,
+  ReportsContent,
 } from './content';
 
 export default function PanelAdminPage() {
@@ -36,18 +40,24 @@ export default function PanelAdminPage() {
     switch (activeSection) {
       case 'dashboard':
         return <DashboardContent />;
-      case 'students':
-        return <StudentsContent />;
-      case 'teachers':
-        return <TeachersContent />;
-      case 'courses':
-        return <CoursesContent />;
+      case 'levels':
+        return <LevelsContent />;
+      case 'periods':
+        return <PeriodsContent />;
       case 'grades':
         return <GradesContent />;
+      case 'sections':
+        return <SectionsContent />;
+      case 'subjects':
+        return <SubjectsContent />;
+      case 'persons':
+        return <PersonsContent />;
+      case 'students':
+        return <StudentsContent />;
+      case 'enrollments':
+        return <EnrollmentsContent />;
       case 'reports':
         return <ReportsContent />;
-      case 'settings':
-        return <SettingsContent />;
       default:
         return <DashboardContent />;
     }
