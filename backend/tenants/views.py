@@ -3,10 +3,16 @@ from .models import Plan, Client, Domain
 from .serializers import PlanSerializer, ClientSerializer, DomainSerializer
 
 
-class PlanCreateView(generics.CreateAPIView):
+# GET POST
+class PlanListCreateView(generics.ListCreateAPIView):
     queryset = Plan.objects.all()
     serializer_class = PlanSerializer
-    permission_classes = [permissions.IsAdminUser]
+
+
+# GET POST PUT PATCH DELETE
+class PlanDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Plan.objects.all()
+    serializer_class = PlanSerializer
 
 
 class ClientCreateView(generics.CreateAPIView):

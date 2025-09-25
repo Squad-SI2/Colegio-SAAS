@@ -29,7 +29,6 @@ python manage.py makemigrations || true
 echo "Aplicando migrate_schemas --shared (django-tenants, esquema public)..."
 python manage.py migrate_schemas --shared --noinput
 
-
 # >>>>>>>>>>>>>>>>>>>>>>>>> SUPERUSER (usar manage.py shell) <<<<<<<<<<<<<<<<<<<<<<<<<
 if [ -n "$DJANGO_SUPERUSER_EMAIL" ] && [ -n "$DJANGO_SUPERUSER_PASSWORD" ]; then
   echo "Creando/actualizando superuser $DJANGO_SUPERUSER_EMAIL ..."
@@ -51,6 +50,9 @@ else
   echo "DJANGO_SUPERUSER_EMAIL/PASSWORD no definidos; omito creación de superuser."
 fi
 # >>>>>>>>>>>>>>>>>>>>>>> SUPERUSER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+echo "CREANDO PLANES"
+python manage.py shell < ./seed/create_planes.py
 
 # Static/Media
 echo "Preparando carpetas de static y media..."
