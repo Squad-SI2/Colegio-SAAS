@@ -55,7 +55,7 @@ export default function PeriodsContent() {
   const fetchPeriods = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/periods`, {
+      const response = await fetch(`api/periods`, {
         credentials: 'include',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -76,9 +76,7 @@ export default function PeriodsContent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = editingPeriod
-        ? `${API_BASE_URL}/periods/${editingPeriod.id}`
-        : `${API_BASE_URL}/periods`;
+      const url = editingPeriod ? `api/periods/${editingPeriod.id}` : `api/periods`;
 
       const method = editingPeriod ? 'PUT' : 'POST';
 
@@ -106,7 +104,7 @@ export default function PeriodsContent() {
     if (!confirm('¿Está seguro de eliminar este período?')) return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/periods/${id}`, {
+      const response = await fetch(`api/periods/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,

@@ -65,7 +65,7 @@ export default function SectionsContent() {
 
   const fetchLevels = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/levels`, {
+      const response = await fetch(`api/levels`, {
         credentials: 'include',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -83,7 +83,7 @@ export default function SectionsContent() {
 
   const fetchGrades = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/grades`, {
+      const response = await fetch(`api/grades`, {
         credentials: 'include',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -109,7 +109,7 @@ export default function SectionsContent() {
   const fetchSections = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/sections`, {
+      const response = await fetch(`api/sections`, {
         credentials: 'include',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -141,9 +141,7 @@ export default function SectionsContent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = editingSection
-        ? `${API_BASE_URL}/sections/${editingSection.id}`
-        : `${API_BASE_URL}/sections`;
+      const url = editingSection ? `api/sections/${editingSection.id}` : `api/sections`;
 
       const method = editingSection ? 'PUT' : 'POST';
 
@@ -182,7 +180,7 @@ export default function SectionsContent() {
     if (!confirm('¿Está seguro de eliminar esta sección?')) return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/sections/${id}`, {
+      const response = await fetch(`api/sections/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
