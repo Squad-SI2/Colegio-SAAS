@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
-import { API_BASE_URL } from '../../constants';
 
 export default function PersonsContent() {
   const [persons, setPersons] = useState([]);
@@ -79,7 +78,7 @@ export default function PersonsContent() {
   const fetchPersons = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/persons`, {
+      const response = await fetch(`api/persons`, {
         credentials: 'include',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -100,9 +99,7 @@ export default function PersonsContent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = editingPerson
-        ? `${API_BASE_URL}/persons/${editingPerson.id}`
-        : `${API_BASE_URL}/persons`;
+      const url = editingPerson ? `api/persons/${editingPerson.id}` : `api/persons`;
 
       const method = editingPerson ? 'PUT' : 'POST';
 
@@ -148,7 +145,7 @@ export default function PersonsContent() {
       return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/persons/${id}`, {
+      const response = await fetch(`api/persons/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,

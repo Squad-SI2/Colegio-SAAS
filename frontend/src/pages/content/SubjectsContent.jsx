@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
-import { API_BASE_URL } from '../../constants';
 
 export default function SubjectsContent() {
   const [subjects, setSubjects] = useState([]);
@@ -59,7 +58,7 @@ export default function SubjectsContent() {
 
   const fetchLevels = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/levels`, {
+      const response = await fetch(`api/levels`, {
         credentials: 'include',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -78,7 +77,7 @@ export default function SubjectsContent() {
   const fetchSubjects = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/subjects`, {
+      const response = await fetch(`api/subjects`, {
         credentials: 'include',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -106,9 +105,7 @@ export default function SubjectsContent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = editingSubject
-        ? `${API_BASE_URL}/subjects/${editingSubject.id}`
-        : `${API_BASE_URL}/subjects`;
+      const url = editingSubject ? `api/subjects/${editingSubject.id}` : `api/subjects`;
 
       const method = editingSubject ? 'PUT' : 'POST';
 
@@ -146,7 +143,7 @@ export default function SubjectsContent() {
     if (!confirm('¿Está seguro de eliminar esta asignatura?')) return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/subjects/${id}`, {
+      const response = await fetch(`api/subjects/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,

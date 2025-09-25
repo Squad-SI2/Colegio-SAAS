@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
-import { API_BASE_URL } from '../../constants';
 
 export default function EnrollmentsContent() {
   const [enrollments, setEnrollments] = useState([]);
@@ -86,7 +85,7 @@ export default function EnrollmentsContent() {
   // Fetch de datos maestros
   const fetchStudents = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/students`, {
+      const response = await fetch(`api/students`, {
         credentials: 'include',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -103,7 +102,7 @@ export default function EnrollmentsContent() {
 
   const fetchPeriods = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/periods`, {
+      const response = await fetch(`api/periods`, {
         credentials: 'include',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -120,7 +119,7 @@ export default function EnrollmentsContent() {
 
   const fetchGrades = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/grades`, {
+      const response = await fetch(`api/grades`, {
         credentials: 'include',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -137,7 +136,7 @@ export default function EnrollmentsContent() {
 
   const fetchSections = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/sections`, {
+      const response = await fetch(`api/sections`, {
         credentials: 'include',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -155,7 +154,7 @@ export default function EnrollmentsContent() {
   const fetchEnrollments = async (studentsData, periodsData, gradesData, sectionsData) => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/enrollments`, {
+      const response = await fetch(`api/enrollments`, {
         credentials: 'include',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -210,9 +209,7 @@ export default function EnrollmentsContent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = editingEnrollment
-        ? `${API_BASE_URL}/enrollments/${editingEnrollment.id}`
-        : `${API_BASE_URL}/enrollments`;
+      const url = editingEnrollment ? `api/enrollments/${editingEnrollment.id}` : `api/enrollments`;
 
       const method = editingEnrollment ? 'PUT' : 'POST';
 
@@ -256,7 +253,7 @@ export default function EnrollmentsContent() {
       return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/enrollments/${id}`, {
+      const response = await fetch(`api/enrollments/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,

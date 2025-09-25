@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
-import { API_BASE_URL } from '../../constants';
 
 export default function StudentsContent() {
   const [students, setStudents] = useState([]);
@@ -70,7 +69,7 @@ export default function StudentsContent() {
 
   const fetchPersons = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/persons`, {
+      const response = await fetch(`api/persons`, {
         credentials: 'include',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -89,7 +88,7 @@ export default function StudentsContent() {
   const fetchStudents = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/students`, {
+      const response = await fetch(`api/students`, {
         credentials: 'include',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -121,9 +120,7 @@ export default function StudentsContent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = editingStudent
-        ? `${API_BASE_URL}/students/${editingStudent.id}`
-        : `${API_BASE_URL}/students`;
+      const url = editingStudent ? `api/students/${editingStudent.id}` : `api/students`;
 
       const method = editingStudent ? 'PUT' : 'POST';
 
@@ -168,7 +165,7 @@ export default function StudentsContent() {
       return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/students/${id}`, {
+      const response = await fetch(`api/students/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,

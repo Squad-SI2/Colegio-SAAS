@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
-import { API_BASE_URL } from '../../constants';
 
 export default function GradesContent() {
   const [grades, setGrades] = useState([]);
@@ -59,7 +58,7 @@ export default function GradesContent() {
 
   const fetchLevels = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/levels`, {
+      const response = await fetch(`api/levels`, {
         credentials: 'include',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -78,7 +77,7 @@ export default function GradesContent() {
   const fetchGrades = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/grades`, {
+      const response = await fetch(`api/grades`, {
         credentials: 'include',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -106,9 +105,7 @@ export default function GradesContent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = editingGrade
-        ? `${API_BASE_URL}/grades/${editingGrade.id}`
-        : `${API_BASE_URL}/grades`;
+      const url = editingGrade ? `api/grades/${editingGrade.id}` : `api/grades`;
 
       const method = editingGrade ? 'PUT' : 'POST';
 
@@ -147,7 +144,7 @@ export default function GradesContent() {
     if (!confirm('¿Está seguro de eliminar este grado?')) return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/grades/${id}`, {
+      const response = await fetch(`api/grades/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
