@@ -3,17 +3,17 @@ import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
 import { API_BASE_URL } from '../../constants';
 
-export default function GradesContent() {
-  const [grades, setGrades] = useState([]);
+export default function SubjectsContent() {
+  const [subjects, setSubjects] = useState([]);
   const [levels, setLevels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [editingGrade, setEditingGrade] = useState(null);
+  const [editingSubject, setEditingSubject] = useState(null);
   const [formData, setFormData] = useState({
     level: '',
     name: '',
-    order: 1,
+    short_name: '',
     is_active: true,
   });
 
@@ -23,8 +23,8 @@ export default function GradesContent() {
       title: 'Nivel Educativo',
       render: (item) => item.level_name || 'N/A',
     },
-    { key: 'name', title: 'Grado' },
-    { key: 'order', title: 'Orden' },
+    { key: 'name', title: 'Asignatura' },
+    { key: 'short_name', title: 'Abreviatura' },
     {
       key: 'is_active',
       title: 'Estado',
@@ -34,7 +34,7 @@ export default function GradesContent() {
             item.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
           }`}
         >
-          {item.is_active ? 'Activo' : 'Inactivo'}
+          {item.is_active ? 'Activa' : 'Inactiva'}
         </span>
       ),
     },
@@ -75,27 +75,27 @@ export default function GradesContent() {
     }
   };
 
-  const fetchGrades = async () => {
+  const fetchSubjects = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/grades`, {
+      const response = await fetch(`${API_BASE_URL}/subjects`, {
         credentials: 'include',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       });
 
-      if (!response.ok) throw new Error('Error al cargar grados');
+      if (!response.ok) throw new Error('Error al cargar asignaturas');
 
       const data = await response.json();
 
       // Enriquecer datos con nombre del nivel
-      const gradesWithLevelName = data.map((grade) => ({
-        ...grade,
-        level_name: levels.find((level) => level.id === grade.level)?.name || 'N/A',
+      const subjectsWithLevelName = data.map((subject) => ({
+        ...subject,
+        level_name: levels.find((level) => level.id === subject.level)?.name || 'N/A',
       }));
 
-      setGrades(gradesWithLevelName);
+      setSubjects(subjectsWithLevelName);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -106,17 +106,16 @@ export default function GradesContent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = editingGrade
-        ? `${API_BASE_URL}/grades/${editingGrade.id}`
-        : `${API_BASE_URL}/grades`;
+      const url = editingSubject
+        ? `${API_BASE_URL}/subjects/${editingSubject.id}`
+        : `${API_BASE_URL}/subjects`;
 
-      const method = editingGrade ? 'PUT' : 'POST';
+      const method = editingSubject ? 'PUT' : 'POST';
 
-      // Preparar datos para enviar (convertir level a número)
+      // Preparar datos para enviar
       const submitData = {
         ...formData,
         level: parseInt(formData.level),
-        order: parseInt(formData.order),
       };
 
       const response = await fetch(url, {
@@ -131,10 +130,10 @@ export default function GradesContent() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.detail || 'Error al guardar grado');
+        throw new Error(errorData.detail || 'Error al guardar asignatura');
       }
 
-      await fetchGrades();
+      await fetchSubjects();
       setShowModal(false);
       resetForm();
       setError('');
@@ -144,10 +143,10 @@ export default function GradesContent() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('¿Está seguro de eliminar este grado?')) return;
+    if (!confirm('¿Está seguro de eliminar esta asignatura?')) return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/grades/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/subjects/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -155,22 +154,22 @@ export default function GradesContent() {
         credentials: 'include',
       });
 
-      if (!response.ok) throw new Error('Error al eliminar grado');
+      if (!response.ok) throw new Error('Error al eliminar asignatura');
 
-      await fetchGrades();
+      await fetchSubjects();
       setError('');
     } catch (err) {
       setError(err.message);
     }
   };
 
-  const handleEdit = (grade) => {
-    setEditingGrade(grade);
+  const handleEdit = (subject) => {
+    setEditingSubject(subject);
     setFormData({
-      level: grade.level.toString(),
-      name: grade.name,
-      order: grade.order,
-      is_active: grade.is_active,
+      level: subject.level.toString(),
+      name: subject.name,
+      short_name: subject.short_name,
+      is_active: subject.is_active,
     });
     setShowModal(true);
   };
@@ -179,10 +178,10 @@ export default function GradesContent() {
     setFormData({
       level: '',
       name: '',
-      order: 1,
+      short_name: '',
       is_active: true,
     });
-    setEditingGrade(null);
+    setEditingSubject(null);
   };
 
   const handleNew = () => {
@@ -190,46 +189,46 @@ export default function GradesContent() {
     setShowModal(true);
   };
 
+  // Cargar datos iniciales
   useEffect(() => {
-    const loadData = async () => {
+    const loadInitialData = async () => {
       await fetchLevels();
-      await fetchGrades();
     };
-    loadData();
+    loadInitialData();
   }, []);
 
-  // Volver a cargar grados cuando levels se actualice
+  // Cuando levels se cargue, cargar subjects
   useEffect(() => {
-    if (levels.length > 0 && grades.length === 0) {
-      fetchGrades();
+    if (levels.length > 0) {
+      fetchSubjects();
     }
   }, [levels]);
 
-  if (loading) return <div className='py-8 text-center'>Cargando grados...</div>;
+  if (loading) return <div className='py-8 text-center'>Cargando asignaturas...</div>;
   if (error) return <div className='py-8 text-center text-red-600'>Error: {error}</div>;
 
   return (
     <div>
       <div className='mb-6 flex items-center justify-between'>
-        <h2 className='text-2xl font-semibold'>Grados/Cursos</h2>
+        <h2 className='text-2xl font-semibold'>Asignaturas/Materias</h2>
         <button
           onClick={handleNew}
           className='rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700'
           disabled={levels.length === 0}
         >
-          + Nuevo Grado
+          + Nueva Asignatura
         </button>
       </div>
 
       {levels.length === 0 && (
         <div className='mb-4 rounded-lg bg-yellow-100 p-4 text-yellow-700'>
-          Primero debe crear niveles educativos para poder agregar grados.
+          Primero debe crear niveles educativos para poder agregar asignaturas.
         </div>
       )}
 
       {error && <div className='mb-4 rounded-lg bg-red-100 p-4 text-red-700'>{error}</div>}
 
-      <DataTable columns={columns} data={grades} />
+      <DataTable columns={columns} data={subjects} />
 
       <Modal
         isOpen={showModal}
@@ -237,7 +236,7 @@ export default function GradesContent() {
           setShowModal(false);
           resetForm();
         }}
-        title={editingGrade ? 'Editar Grado' : 'Nuevo Grado'}
+        title={editingSubject ? 'Editar Asignatura' : 'Nueva Asignatura'}
       >
         <form onSubmit={handleSubmit} className='space-y-4'>
           <div>
@@ -258,29 +257,37 @@ export default function GradesContent() {
           </div>
 
           <div>
-            <label className='block text-sm font-medium text-gray-700'>Nombre del Grado *</label>
+            <label className='block text-sm font-medium text-gray-700'>
+              Nombre de la Asignatura *
+            </label>
             <input
               type='text'
               required
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               className='mt-1 block w-full rounded-lg border border-gray-300 p-2'
-              placeholder='Ej: Primero, Segundo, etc.'
+              placeholder='Ej: Matemáticas, Lengua y Literatura, Ciencias...'
+              maxLength={120}
             />
+            <p className='mt-1 text-sm text-gray-500'>
+              Nombre completo de la asignatura (máx. 120 caracteres)
+            </p>
           </div>
 
           <div>
-            <label className='block text-sm font-medium text-gray-700'>Orden *</label>
+            <label className='block text-sm font-medium text-gray-700'>Abreviatura</label>
             <input
-              type='number'
-              required
-              min='1'
-              value={formData.order}
-              onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 1 })}
+              type='text'
+              value={formData.short_name}
+              onChange={(e) =>
+                setFormData({ ...formData, short_name: e.target.value.toUpperCase() })
+              }
               className='mt-1 block w-full rounded-lg border border-gray-300 p-2'
+              placeholder='Ej: MAT, LL, CN...'
+              maxLength={30}
             />
             <p className='mt-1 text-sm text-gray-500'>
-              Número para ordenar los grados (1, 2, 3...)
+              Código corto para identificar la asignatura (máx. 30 caracteres)
             </p>
           </div>
 
@@ -293,7 +300,7 @@ export default function GradesContent() {
               className='mr-2'
             />
             <label htmlFor='is_active' className='text-sm font-medium text-gray-700'>
-              Grado activo
+              Asignatura activa
             </label>
           </div>
 
@@ -312,7 +319,7 @@ export default function GradesContent() {
               type='submit'
               className='rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700'
             >
-              {editingGrade ? 'Actualizar' : 'Crear'}
+              {editingSubject ? 'Actualizar' : 'Crear'}
             </button>
           </div>
         </form>

@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage';
 import PanelAdminPage from './pages/PanelAdminPage';
 import SignUpPage from './pages/SignUpPage';
 import RegisterSchoolPage from './pages/RegisterSchoolPage';
+import ProtectedRoute from './secure/ProtectedRoute';
 
 function App() {
   return (
@@ -14,7 +15,14 @@ function App() {
         <Route path='/login' element={<LoginPage />} />
         <Route path='/signup' element={<SignUpPage />} />
         <Route path='/register-school' element={<RegisterSchoolPage />} />
-        <Route path='/panel-admin' element={<PanelAdminPage />} />
+        <Route
+          path='/panel-admin'
+          element={
+            <ProtectedRoute>
+              <PanelAdminPage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

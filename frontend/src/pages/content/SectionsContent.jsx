@@ -3,28 +3,34 @@ import DataTable from '../../components/DataTable';
 import Modal from '../../components/Modal';
 import { API_BASE_URL } from '../../constants';
 
-export default function GradesContent() {
+export default function SectionsContent() {
+  const [sections, setSections] = useState([]);
   const [grades, setGrades] = useState([]);
   const [levels, setLevels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [editingGrade, setEditingGrade] = useState(null);
+  const [editingSection, setEditingSection] = useState(null);
   const [formData, setFormData] = useState({
-    level: '',
+    grade: '',
     name: '',
-    order: 1,
+    capacity: 30,
     is_active: true,
   });
 
   const columns = [
     {
       key: 'level_name',
-      title: 'Nivel Educativo',
+      title: 'Nivel',
       render: (item) => item.level_name || 'N/A',
     },
-    { key: 'name', title: 'Grado' },
-    { key: 'order', title: 'Orden' },
+    {
+      key: 'grade_name',
+      title: 'Grado',
+      render: (item) => item.grade_name || 'N/A',
+    },
+    { key: 'name', title: 'Sección' },
+    { key: 'capacity', title: 'Capacidad' },
     {
       key: 'is_active',
       title: 'Estado',
@@ -34,7 +40,7 @@ export default function GradesContent() {
             item.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
           }`}
         >
-          {item.is_active ? 'Activo' : 'Inactivo'}
+          {item.is_active ? 'Activa' : 'Inactiva'}
         </span>
       ),
     },
@@ -77,7 +83,6 @@ export default function GradesContent() {
 
   const fetchGrades = async () => {
     try {
-      setLoading(true);
       const response = await fetch(`${API_BASE_URL}/grades`, {
         credentials: 'include',
         headers: {
@@ -97,6 +102,36 @@ export default function GradesContent() {
 
       setGrades(gradesWithLevelName);
     } catch (err) {
+      console.error('Error loading grades:', err);
+    }
+  };
+
+  const fetchSections = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_BASE_URL}/sections`, {
+        credentials: 'include',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      });
+
+      if (!response.ok) throw new Error('Error al cargar secciones');
+
+      const data = await response.json();
+
+      // Enriquecer datos con información de grado y nivel
+      const sectionsEnriched = data.map((section) => {
+        const grade = grades.find((g) => g.id === section.grade);
+        return {
+          ...section,
+          grade_name: grade?.name || 'N/A',
+          level_name: grade?.level_name || 'N/A',
+        };
+      });
+
+      setSections(sectionsEnriched);
+    } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
@@ -106,17 +141,17 @@ export default function GradesContent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = editingGrade
-        ? `${API_BASE_URL}/grades/${editingGrade.id}`
-        : `${API_BASE_URL}/grades`;
+      const url = editingSection
+        ? `${API_BASE_URL}/sections/${editingSection.id}`
+        : `${API_BASE_URL}/sections`;
 
-      const method = editingGrade ? 'PUT' : 'POST';
+      const method = editingSection ? 'PUT' : 'POST';
 
-      // Preparar datos para enviar (convertir level a número)
+      // Preparar datos para enviar
       const submitData = {
         ...formData,
-        level: parseInt(formData.level),
-        order: parseInt(formData.order),
+        grade: parseInt(formData.grade),
+        capacity: parseInt(formData.capacity),
       };
 
       const response = await fetch(url, {
@@ -131,10 +166,10 @@ export default function GradesContent() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.detail || 'Error al guardar grado');
+        throw new Error(errorData.detail || 'Error al guardar sección');
       }
 
-      await fetchGrades();
+      await fetchSections();
       setShowModal(false);
       resetForm();
       setError('');
@@ -144,10 +179,10 @@ export default function GradesContent() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm('¿Está seguro de eliminar este grado?')) return;
+    if (!confirm('¿Está seguro de eliminar esta sección?')) return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/grades/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/sections/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -155,34 +190,34 @@ export default function GradesContent() {
         credentials: 'include',
       });
 
-      if (!response.ok) throw new Error('Error al eliminar grado');
+      if (!response.ok) throw new Error('Error al eliminar sección');
 
-      await fetchGrades();
+      await fetchSections();
       setError('');
     } catch (err) {
       setError(err.message);
     }
   };
 
-  const handleEdit = (grade) => {
-    setEditingGrade(grade);
+  const handleEdit = (section) => {
+    setEditingSection(section);
     setFormData({
-      level: grade.level.toString(),
-      name: grade.name,
-      order: grade.order,
-      is_active: grade.is_active,
+      grade: section.grade.toString(),
+      name: section.name,
+      capacity: section.capacity,
+      is_active: section.is_active,
     });
     setShowModal(true);
   };
 
   const resetForm = () => {
     setFormData({
-      level: '',
+      grade: '',
       name: '',
-      order: 1,
+      capacity: 30,
       is_active: true,
     });
-    setEditingGrade(null);
+    setEditingSection(null);
   };
 
   const handleNew = () => {
@@ -190,46 +225,53 @@ export default function GradesContent() {
     setShowModal(true);
   };
 
+  // Cargar datos iniciales
   useEffect(() => {
-    const loadData = async () => {
+    const loadInitialData = async () => {
       await fetchLevels();
-      await fetchGrades();
     };
-    loadData();
+    loadInitialData();
   }, []);
 
-  // Volver a cargar grados cuando levels se actualice
+  // Cuando levels se cargue, cargar grades
   useEffect(() => {
-    if (levels.length > 0 && grades.length === 0) {
+    if (levels.length > 0) {
       fetchGrades();
     }
   }, [levels]);
 
-  if (loading) return <div className='py-8 text-center'>Cargando grados...</div>;
+  // Cuando grades se cargue, cargar sections
+  useEffect(() => {
+    if (grades.length > 0) {
+      fetchSections();
+    }
+  }, [grades]);
+
+  if (loading) return <div className='py-8 text-center'>Cargando secciones...</div>;
   if (error) return <div className='py-8 text-center text-red-600'>Error: {error}</div>;
 
   return (
     <div>
       <div className='mb-6 flex items-center justify-between'>
-        <h2 className='text-2xl font-semibold'>Grados/Cursos</h2>
+        <h2 className='text-2xl font-semibold'>Secciones/Paralelos</h2>
         <button
           onClick={handleNew}
           className='rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700'
-          disabled={levels.length === 0}
+          disabled={grades.length === 0}
         >
-          + Nuevo Grado
+          + Nueva Sección
         </button>
       </div>
 
-      {levels.length === 0 && (
+      {grades.length === 0 && (
         <div className='mb-4 rounded-lg bg-yellow-100 p-4 text-yellow-700'>
-          Primero debe crear niveles educativos para poder agregar grados.
+          Primero debe crear grados para poder agregar secciones.
         </div>
       )}
 
       {error && <div className='mb-4 rounded-lg bg-red-100 p-4 text-red-700'>{error}</div>}
 
-      <DataTable columns={columns} data={grades} />
+      <DataTable columns={columns} data={sections} />
 
       <Modal
         isOpen={showModal}
@@ -237,50 +279,59 @@ export default function GradesContent() {
           setShowModal(false);
           resetForm();
         }}
-        title={editingGrade ? 'Editar Grado' : 'Nuevo Grado'}
+        title={editingSection ? 'Editar Sección' : 'Nueva Sección'}
       >
         <form onSubmit={handleSubmit} className='space-y-4'>
           <div>
-            <label className='block text-sm font-medium text-gray-700'>Nivel Educativo *</label>
+            <label className='block text-sm font-medium text-gray-700'>Grado *</label>
             <select
               required
-              value={formData.level}
-              onChange={(e) => setFormData({ ...formData, level: e.target.value })}
+              value={formData.grade}
+              onChange={(e) => setFormData({ ...formData, grade: e.target.value })}
               className='mt-1 block w-full rounded-lg border border-gray-300 p-2'
             >
-              <option value=''>Seleccione un nivel</option>
-              {levels.map((level) => (
-                <option key={level.id} value={level.id}>
-                  {level.name}
+              <option value=''>Seleccione un grado</option>
+              {grades.map((grade) => (
+                <option key={grade.id} value={grade.id}>
+                  {grade.level_name} - {grade.name}
                 </option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className='block text-sm font-medium text-gray-700'>Nombre del Grado *</label>
+            <label className='block text-sm font-medium text-gray-700'>
+              Nombre de la Sección *
+            </label>
             <input
               type='text'
               required
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value.toUpperCase() })}
               className='mt-1 block w-full rounded-lg border border-gray-300 p-2'
-              placeholder='Ej: Primero, Segundo, etc.'
+              placeholder='Ej: A, B, C...'
+              maxLength={5}
             />
+            <p className='mt-1 text-sm text-gray-500'>
+              Letra o identificador de la sección (máx. 5 caracteres)
+            </p>
           </div>
 
           <div>
-            <label className='block text-sm font-medium text-gray-700'>Orden *</label>
+            <label className='block text-sm font-medium text-gray-700'>Capacidad *</label>
             <input
               type='number'
               required
               min='1'
-              value={formData.order}
-              onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 1 })}
+              max='50'
+              value={formData.capacity}
+              onChange={(e) =>
+                setFormData({ ...formData, capacity: parseInt(e.target.value) || 30 })
+              }
               className='mt-1 block w-full rounded-lg border border-gray-300 p-2'
             />
             <p className='mt-1 text-sm text-gray-500'>
-              Número para ordenar los grados (1, 2, 3...)
+              Número máximo de estudiantes en esta sección
             </p>
           </div>
 
@@ -293,7 +344,7 @@ export default function GradesContent() {
               className='mr-2'
             />
             <label htmlFor='is_active' className='text-sm font-medium text-gray-700'>
-              Grado activo
+              Sección activa
             </label>
           </div>
 
@@ -312,7 +363,7 @@ export default function GradesContent() {
               type='submit'
               className='rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700'
             >
-              {editingGrade ? 'Actualizar' : 'Crear'}
+              {editingSection ? 'Actualizar' : 'Crear'}
             </button>
           </div>
         </form>

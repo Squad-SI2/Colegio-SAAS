@@ -4,6 +4,7 @@ from django.db import models
 
 class UserManager(BaseUserManager):
     """Manager para autenticar por email (sin username)."""
+
     use_in_migrations = True
 
     def create_user(self, email, password=None, **extra_fields):
@@ -37,6 +38,7 @@ class User(AbstractUser):
     - Autenticación por email (único).
     - Sin 'username'.
     """
+
     username = None  # deshabilitamos username
     name = models.CharField(max_length=150, default="user")
     email = models.EmailField(unique=True)

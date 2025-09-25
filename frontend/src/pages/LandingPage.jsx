@@ -1,10 +1,89 @@
+import { useState, useEffect } from 'react';
 import { SYSTEM_NAME } from '../constants/index';
 import NavBar from '../components/NavBar';
 import FeatureCard from '../components/FeatureCard';
 import PriceCard from '../components/PriceCard';
 import TestimonialCard from '../components/TestimonialCard';
+import { server } from '../utils/getServer';
 
 function LandingPage() {
+  const [plans, setPlans] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const data = await server().getPlanes();
+        setPlans(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPlans();
+  }, []);
+
+  // Función para formatear las características de los planes
+  const formatPlanFeatures = (plan) => {
+    const features = [];
+
+    features.push(`Hasta ${plan.max_students} estudiantes`);
+    features.push(`Hasta ${plan.max_users} usuarios`);
+
+    if (plan.features.reports) {
+      features.push('Reportes avanzados');
+    }
+    if (plan.features.analytics) {
+      features.push('Analytics integrado');
+    }
+
+    if (plan.features.support === 'email') {
+      features.push('Soporte por email');
+    } else if (plan.features.support === 'chat') {
+      features.push('Soporte por chat');
+    } else if (plan.features.support === '24/7') {
+      features.push('Soporte 24/7');
+    }
+
+    return features;
+  };
+
+  const isPopularPlan = (planId) => {
+    return planId === 2;
+  };
+
+  const getPlanDescription = (plan) => {
+    switch (plan.id) {
+      case 1:
+        return 'Perfecto para pequeñas academias o centros educativos';
+      case 2:
+        return 'Ideal para colegios medianos con necesidades avanzadas';
+      case 3:
+        return 'Para grandes instituciones con requerimientos complejos';
+      default:
+        return 'Plan diseñado para instituciones educativas';
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className='flex min-h-screen items-center justify-center'>
+        <div className='text-lg text-indigo-600'>Cargando planes...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className='flex min-h-screen items-center justify-center'>
+        <div className='text-lg text-red-600'>Error: {error}</div>
+      </div>
+    );
+  }
+
   return (
     <main className='flex min-h-screen flex-col bg-gradient-to-br from-blue-50 to-indigo-100'>
       <NavBar
@@ -133,51 +212,19 @@ function LandingPage() {
           </p>
 
           <div className='flex flex-col justify-center gap-8 md:flex-row'>
-            <PriceCard
-              plan='Básico'
-              price={120}
-              description='Perfecto para pequeñas academias o centros educativos'
-              features={[
-                'Hasta 1000 alumnos',
-                'Gestión académica básica',
-                'Gestión de matriculas',
-                'Comunicación con padres',
-              ]}
-              isPopular={false}
-            />
-            <PriceCard
-              plan='Profesional'
-              price={220}
-              description='Ideal para colegios medianos con necesidades avanzadas'
-              features={[
-                'Hasta 5000 alumnos',
-                'Gestión académica completa',
-                'Sistema de pagos integrado',
-                'Reportes avanzados',
-                'Soporte prioritario 24/7',
-              ]}
-              isPopular={true}
-            />
-            <PriceCard
-              plan='Premium'
-              price={390}
-              description='Para grandes instituciones con requerimientos complejos'
-              features={[
-                'Alumnos ilimitados',
-                'Personalización avanzada',
-                'API completa',
-                'Soporte 24/7 dedicado',
-              ]}
-              isPopular={false}
-            />
+            {plans.map((plan) => (
+              <PriceCard
+                key={plan.id}
+                plan={plan.name}
+                price={parseFloat(plan.price)}
+                period={plan.period === 'M' ? 'mes' : 'año'}
+                description={getPlanDescription(plan)}
+                features={formatPlanFeatures(plan)}
+                isPopular={isPopularPlan(plan.id)}
+                currency={plan.currency}
+              />
+            ))}
           </div>
-
-          <p className='mt-8 text-center text-gray-500'>
-            ¿Necesitas un plan personalizado?{' '}
-            <a href='#contact' className='text-indigo-600 hover:underline'>
-              Contáctanos
-            </a>
-          </p>
         </div>
       </section>
       <section id='testimonials' className='bg-white px-4 py-16'>
@@ -231,7 +278,7 @@ function LandingPage() {
         <div className='mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-4'>
           <div>
             <div className='mb-4 flex items-center'>
-              <img src='/logo.png' alt={`${SYSTEM_NAME} logo`} className='mr-2 h-8 w-auto' />
+              <img src='/images/logo.png' alt={`${SYSTEM_NAME} logo`} className='mr-2 h-8 w-auto' />
               <span className='text-xl font-bold'>{SYSTEM_NAME}</span>
             </div>
             <p className='text-indigo-200'>

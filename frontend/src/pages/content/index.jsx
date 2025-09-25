@@ -1,7 +1,10 @@
-export { default as StudentsContent } from './StudentContent';
-export { default as CoursesContent } from './CoursesContent';
-export { default as GradesContent } from './GradesContent';
-export { default as ReportsContent } from './ReportsContent';
-export { default as SettingsContent } from './SettingsContent';
-export { default as TeachersContent } from './TeachersContent';
 export { default as DashboardContent } from './DashboardContent';
+export { default as LevelsContent } from './LevelsContent';
+export { default as PeriodsContent } from './PeriodsContent';
+export { default as GradesContent } from './GradesContent';
+export { default as SectionsContent } from './SectionsContent';
+export { default as SubjectsContent } from './SubjectsContent';
+export { default as PersonsContent } from './PersonsContent';
+export { default as StudentsContent } from './StudentsContent';
+export { default as EnrollmentsContent } from './EnrollmentsContent';
+// export { default as ReportsContent } from './ReportsContent';

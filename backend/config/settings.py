@@ -31,12 +31,10 @@ SHARED_APPS = [
     "django.contrib.admin",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     # terceros
     "corsheaders",
     "rest_framework",
     "drf_spectacular",
-
     # propias compartidas
     "accounts",
     "tenants",
@@ -55,9 +53,9 @@ INSTALLED_APPS = SHARED_APPS + TENANT_APPS
 # ========== Middleware ==========
 MIDDLEWARE = [
     "tenants.middleware_fixed.FixedTenantDevMiddleware",
-    #"django_tenants.middleware.main.TenantMainMiddleware",  # primero
+    # "django_tenants.middleware.main.TenantMainMiddleware",  # primero
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",           # estáticos en contenedor
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # estáticos en contenedor
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -78,8 +76,8 @@ DATABASES = {
         "NAME": env("POSTGRES_DB"),
         "USER": env("POSTGRES_USER"),
         "PASSWORD": env("POSTGRES_PASSWORD"),
-        "HOST": env("POSTGRES_HOST"),   # en Docker: "db"
-        "PORT": env("POSTGRES_PORT"),   # 5432
+        "HOST": env("POSTGRES_HOST"),  # en Docker: "db"
+        "PORT": env("POSTGRES_PORT"),  # 5432
     }
 }
 DATABASE_ROUTERS = ("django_tenants.routers.TenantSyncRouter",)
@@ -87,7 +85,9 @@ TENANT_MODEL = "tenants.Client"
 TENANT_DOMAIN_MODEL = "tenants.Domain"
 PUBLIC_SCHEMA_NAME = "public"
 PUBLIC_SCHEMA_URLCONF = "config.public_urls"
-TENANT_NOT_FOUND_EXCEPTION = False  # ⬅️ NUEVO: fallback a public_urls cuando no hay tenant
+TENANT_NOT_FOUND_EXCEPTION = (
+    False  # ⬅️ NUEVO: fallback a public_urls cuando no hay tenant
+)
 
 # Usuario personalizado
 AUTH_USER_MODEL = "accounts.User"
@@ -123,7 +123,9 @@ SPECTACULAR_SETTINGS = {
 
 # Validadores
 AUTH_PASSWORD_VALIDATORS = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
+    },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
@@ -166,4 +168,3 @@ CSRF_TRUSTED_ORIGINS = env.list(
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 DEFAULT_TENANT_SCHEMA = env("DEFAULT_TENANT_SCHEMA", default=None)
-

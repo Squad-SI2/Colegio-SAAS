@@ -13,14 +13,35 @@ class UserAdmin(DjangoUserAdmin):
     # Campos que se muestran/editar en el admin
     fieldsets = (
         (None, {"fields": ("email", "password", "role")}),
-        ("Permisos", {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
+        (
+            "Permisos",
+            {
+                "fields": (
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                    "groups",
+                    "user_permissions",
+                )
+            },
+        ),
         ("Fechas importantes", {"fields": ("last_login", "date_joined")}),
     )
     add_fieldsets = (
-        (None, {
-            "classes": ("wide",),
-            "fields": ("email", "password1", "password2", "role", "is_staff", "is_active"),
-        }),
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "email",
+                    "password1",
+                    "password2",
+                    "role",
+                    "is_staff",
+                    "is_active",
+                ),
+            },
+        ),
     )
 
     search_fields = ("email",)

@@ -57,6 +57,9 @@ else:
 PY
 fi
 
+echo "CREANDO PLANES"
+python manage.py shell < ./seed/create_planes.py
+
 echo "Levantando Gunicorn..."
 exec gunicorn config.wsgi:application \
   --bind 0.0.0.0:8000 \

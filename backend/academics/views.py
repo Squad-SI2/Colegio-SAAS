@@ -1,14 +1,30 @@
 # backend/academics/views.py
 from rest_framework import generics, permissions
-from .models import (EducationLevel, AcademicPeriod, Grade, Section, Subject, Person, Student,
-                     Enrollment)
-from .serializers import (EducationLevelSerializer, AcademicPeriodSerializer, GradeSerializer,
-                          SectionSerializer, SubjectSerializer, PersonSerializer, StudentSerializer,
-                          EnrollmentSerializer)
+from .models import (
+    EducationLevel,
+    AcademicPeriod,
+    Grade,
+    Section,
+    Subject,
+    Person,
+    Student,
+    Enrollment,
+)
+from .serializers import (
+    EducationLevelSerializer,
+    AcademicPeriodSerializer,
+    GradeSerializer,
+    SectionSerializer,
+    SubjectSerializer,
+    PersonSerializer,
+    StudentSerializer,
+    EnrollmentSerializer,
+)
 
 
 class IsStaffUser(permissions.BasePermission):
     """Solo staff puede escribir; lectura cualquiera autenticado."""
+
     def has_permission(self, request, view):
         if not request.user or not request.user.is_authenticated:
             return False
@@ -16,14 +32,17 @@ class IsStaffUser(permissions.BasePermission):
             return True  # lectura para autenticados
         return bool(request.user.is_staff)  # escritura solo staff
 
+
 class EducationLevelListCreateView(generics.ListCreateAPIView):
     """
     GET  /api/levels
     POST /api/levels
     """
+
     queryset = EducationLevel.objects.all()
     serializer_class = EducationLevelSerializer
     permission_classes = [IsStaffUser]
+
 
 class EducationLevelDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -31,6 +50,7 @@ class EducationLevelDetailView(generics.RetrieveUpdateDestroyAPIView):
     PATCH  /api/levels/<id>
     DELETE /api/levels/<id>
     """
+
     queryset = EducationLevel.objects.all()
     serializer_class = EducationLevelSerializer
     permission_classes = [IsStaffUser]
@@ -41,10 +61,12 @@ class AcademicPeriodListCreateView(generics.ListCreateAPIView):
     serializer_class = AcademicPeriodSerializer
     permission_classes = [IsStaffUser]
 
+
 class AcademicPeriodDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = AcademicPeriod.objects.all()
     serializer_class = AcademicPeriodSerializer
     permission_classes = [IsStaffUser]
+
 
 class GradeListCreateView(generics.ListCreateAPIView):
     queryset = Grade.objects.select_related("level").all()
@@ -58,10 +80,12 @@ class GradeListCreateView(generics.ListCreateAPIView):
             qs = qs.filter(level_id=level_id)
         return qs
 
+
 class GradeDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Grade.objects.select_related("level").all()
     serializer_class = GradeSerializer
     permission_classes = [IsStaffUser]
+
 
 class SectionListCreateView(generics.ListCreateAPIView):
     queryset = Section.objects.select_related("grade", "grade__level").all()
@@ -84,6 +108,7 @@ class SectionDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Section.objects.select_related("grade", "grade__level").all()
     serializer_class = SectionSerializer
     permission_classes = [IsStaffUser]
+
 
 class SubjectListCreateView(generics.ListCreateAPIView):
     queryset = Subject.objects.select_related("level").all()
@@ -121,10 +146,10 @@ class PersonListCreateView(generics.ListCreateAPIView):
         if q:
             q = q.strip()
             qs = qs.filter(
-                models.Q(first_name__icontains=q) |
-                models.Q(last_name__icontains=q) |
-                models.Q(doc_number__icontains=q) |
-                models.Q(email__icontains=q)
+                models.Q(first_name__icontains=q)
+                | models.Q(last_name__icontains=q)
+                | models.Q(doc_number__icontains=q)
+                | models.Q(email__icontains=q)
             )
         return qs
 
@@ -148,9 +173,9 @@ class StudentListCreateView(generics.ListCreateAPIView):
         if q:
             q = q.strip()
             qs = qs.filter(
-                models.Q(code__icontains=q) |
-                models.Q(person__first_name__icontains=q) |
-                models.Q(person__last_name__icontains=q)
+                models.Q(code__icontains=q)
+                | models.Q(person__first_name__icontains=q)
+                | models.Q(person__last_name__icontains=q)
             )
         return qs
 
@@ -160,10 +185,11 @@ class StudentDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = StudentSerializer
     permission_classes = [IsStaffUser]
 
+
 class EnrollmentListCreateView(generics.ListCreateAPIView):
-    queryset = (Enrollment.objects
-                .select_related("student", "student__person", "period", "grade", "section")
-                .all())
+    queryset = Enrollment.objects.select_related(
+        "student", "student__person", "period", "grade", "section"
+    ).all()
     serializer_class = EnrollmentSerializer
     permission_classes = [IsStaffUser]
 
@@ -185,16 +211,16 @@ class EnrollmentListCreateView(generics.ListCreateAPIView):
         if q:
             q = q.strip()
             qs = qs.filter(
-                models.Q(student__code__icontains=q) |
-                models.Q(student__person__first_name__icontains=q) |
-                models.Q(student__person__last_name__icontains=q)
+                models.Q(student__code__icontains=q)
+                | models.Q(student__person__first_name__icontains=q)
+                | models.Q(student__person__last_name__icontains=q)
             )
         return qs
 
 
 class EnrollmentDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = (Enrollment.objects
-                .select_related("student", "student__person", "period", "grade", "section")
-                .all())
+    queryset = Enrollment.objects.select_related(
+        "student", "student__person", "period", "grade", "section"
+    ).all()
     serializer_class = EnrollmentSerializer
     permission_classes = [IsStaffUser]
