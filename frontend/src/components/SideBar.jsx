@@ -1,5 +1,4 @@
-// components/SideBar.js
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { SYSTEM_NAME } from '../constants/index';
 
 function Sidebar({ activeSection, setActiveSection }) {
@@ -43,16 +42,6 @@ function Sidebar({ activeSection, setActiveSection }) {
         { id: 'students', name: 'Estudiantes' },
         { id: 'enrollments', name: 'Matrículas' },
       ],
-    },
-    {
-      id: 'reports',
-      name: 'Reportes',
-      icon: '📈',
-    },
-    {
-      id: 'settings',
-      name: 'Configuración',
-      icon: '⚙️',
     },
   ];
 
