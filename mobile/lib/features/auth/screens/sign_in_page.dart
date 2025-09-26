@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../routes/app_routes.dart';
 import '../../../data/repositories/auth_repository.dart';
 
-
-class SignInPage2 extends StatelessWidget {
-  const SignInPage2({super.key});
+class SignInPage extends StatelessWidget {
+  const SignInPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +41,6 @@ class _Logo extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Aquí cambiamos el logo de Flutter por tu logo
         Image.asset(
           "assets/images/logo.png",
           width: isSmallScreen ? 100 : 200,
@@ -60,7 +58,6 @@ class _Logo extends StatelessWidget {
     );
   }
 }
-
 
 class _FormContent extends StatefulWidget {
   const _FormContent();
@@ -166,23 +163,26 @@ class __FormContentState extends State<_FormContent> {
                 ),
                 onPressed: () async {
                   if (_formKey.currentState?.validate() ?? false) {
-                    
-                    
                     try {
                       final ok = await AuthRepository.login(_email, _password);
                       if (ok) {
                         final role = await AuthRepository.getRole();
 
                         if (role == "student") {
-                          Navigator.pushReplacementNamed(context, AppRoutes.studentDashboard);
+                          Navigator.pushReplacementNamed(
+                              context, AppRoutes.studentDashboard);
                         } else if (role == "parent") {
-                          Navigator.pushReplacementNamed(context, AppRoutes.parentDashboard);
+                          Navigator.pushReplacementNamed(
+                              context, AppRoutes.parentDashboard);
+                        } else if (role == "teacher") {
+                          Navigator.pushReplacementNamed(
+                              context, AppRoutes.teacherDashboard);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("Rol no reconocido")),
                           );
                         }
-                      } else {  
+                      } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text("Credenciales inválidas")),
                         );
@@ -192,7 +192,7 @@ class __FormContentState extends State<_FormContent> {
                         SnackBar(content: Text("Error al conectar: $e")),
                       );
                     }
-                  } 
+                  }
                 },
               ),
             ),

@@ -1,63 +1,100 @@
 import 'package:flutter/material.dart';
-import '../../../data/repositories/announcements_repository.dart';
 
-class AnnouncementsScreen extends StatefulWidget {
+class AnnouncementsScreen extends StatelessWidget {
   const AnnouncementsScreen({super.key});
 
   @override
-  State<AnnouncementsScreen> createState() => _AnnouncementsScreenState();
-}
-
-class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
-  List<dynamic> anuncios = [];
-  bool cargando = true;
-
-  @override
-  void initState() {
-    super.initState();
-    cargarAnuncios();
-  }
-
-  void cargarAnuncios() async {
-    try {
-      final data = await AnnouncementsRepository.getAnnouncements();
-      setState(() {
-        anuncios = data;
-        cargando = false;
-      });
-    } catch (e) {
-      setState(() => cargando = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error al cargar anuncios: $e")),
-      );
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    // Dummy de anuncios
+    final List<Map<String, String>> announcements = [
+      {
+        "titulo": "Reunión de padres",
+        "contenido": "Se convoca a todos los padres de familia del curso 3ro de primaria.",
+        "categoria": "Reunión",
+        "fecha": "2025-09-05 18:00",
+        "adjunto": "PDF: convocatoria.pdf"
+      },
+      {
+        "titulo": "Examen de Matemáticas",
+        "contenido": "El examen trimestral de matemáticas será el 12 de septiembre.",
+        "categoria": "Examen",
+        "fecha": "2025-09-12 08:00",
+        "adjunto": ""
+      },
+      {
+        "titulo": "Pago de pensiones",
+        "contenido": "Recordatorio de pago de la pensión escolar antes del 15 de septiembre.",
+        "categoria": "Aviso",
+        "fecha": "2025-09-15 23:59",
+        "adjunto": ""
+      },
+    ];
+
     return Scaffold(
-      appBar: AppBar(title: const Text("Anuncios")),
-      body: cargando
-          ? const Center(child: CircularProgressIndicator())
-          : anuncios.isEmpty
-              ? const Center(child: Text("No hay anuncios disponibles"))
-              : ListView.builder(
-                  itemCount: anuncios.length,
-                  itemBuilder: (context, index) {
-                    final anuncio = anuncios[index];
-                    return Card(
-                      margin: const EdgeInsets.all(8),
-                      child: ListTile(
-                        leading: const Icon(Icons.campaign, color: Colors.blue),
-                        title: Text(
-                          anuncio["titulo"] ?? "Sin título",
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(anuncio["contenido"] ?? "Sin contenido"),
+      appBar: AppBar(
+        title: const Text("Anuncios"),
+      ),
+      body: ListView.builder(
+        itemCount: announcements.length,
+        itemBuilder: (context, index) {
+          final anuncio = announcements[index];
+          return Card(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Título
+                  Text(
+                    anuncio["titulo"]!,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+
+                  // Categoría y fecha
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Chip(
+                        label: Text(anuncio["categoria"]!),
+                        backgroundColor: Colors.blue[100],
                       ),
-                    );
-                  },
-                ),
+                      Text(
+                        anuncio["fecha"]!,
+                        style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+
+                  // Contenido
+                  Text(anuncio["contenido"]!),
+
+                  const SizedBox(height: 8),
+
+                  // Adjunto (si existe)
+                  if (anuncio["adjunto"]!.isNotEmpty)
+                    Row(
+                      children: [
+                        const Icon(Icons.attach_file, size: 18),
+                        const SizedBox(width: 4),
+                        Text(
+                          anuncio["adjunto"]!,
+                          style: const TextStyle(
+                              fontSize: 13, color: Colors.blue),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

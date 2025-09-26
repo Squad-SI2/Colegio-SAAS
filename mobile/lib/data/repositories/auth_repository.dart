@@ -16,6 +16,12 @@ class AuthRepository {
     await prefs.setString("role", "parent");
     await prefs.setInt("user_id", 1);
     return true;
+  }
+  if (email == "profesor@gmail.com" && password == "123456") {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("role", "teacher");
+    await prefs.setInt("user_id", 1);
+    return true;
   }// Fin ByPass 
 
     final response = await ApiClient.post(ApiEndpoints.login, {
