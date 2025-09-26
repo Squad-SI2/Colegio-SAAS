@@ -24,10 +24,27 @@ echo "PostgreSQL listo."
 # fi
 
 echo "Aplicando makemigrations (si no hay cambios, no pasa nada)..."
+#python manage.py makemigrations accounts || true
+#python manage.py makemigrations tenants || true
 python manage.py makemigrations || true
 
 echo "Aplicando migrate_schemas --shared (django-tenants, esquema public)..."
+echo "Asegurando migración inicial de accounts..."
+
+python manage.py makemigrations accounts --noinput || true
+python manage.py makemigrations tenants --noinput || true
+
 python manage.py migrate_schemas --shared --noinput
+python manage.py migrate_schemas
+python manage.py makemigrations plans billing 
+python manage.py migrate_schemas --shared
+
+python manage.py provision_tenant --name "Colegio 101" --schema colegio101 --plan FREE
+# Health:
+#open http://colegio101.127.0.0.1.nip.io:8000/api/health/
+
+
+#python manage.py migrate_schemas --shared --noinput
 
 # >>>>>>>>>>>>>>>>>>>>>>>>> SUPERUSER (usar manage.py shell) <<<<<<<<<<<<<<<<<<<<<<<<<
 if [ -n "$DJANGO_SUPERUSER_EMAIL" ] && [ -n "$DJANGO_SUPERUSER_PASSWORD" ]; then
@@ -52,7 +69,11 @@ fi
 # >>>>>>>>>>>>>>>>>>>>>>> SUPERUSER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 echo "CREANDO PLANES"
-python manage.py shell < ./seed/create_planes.py
+#python manage.py shell < ./seed/create_planes.py
+#python manage.py shell < ./seed/create_users.py
+#python manage.py shell < ./seed/create_tenants.py
+python manage.py seed_plans
+python manage.py seed_plans --update
 
 # Static/Media
 echo "Preparando carpetas de static y media..."
