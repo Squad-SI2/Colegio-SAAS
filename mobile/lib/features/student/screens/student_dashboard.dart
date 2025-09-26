@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../data/repositories/grades_repository.dart';
-import '../../../data/repositories/attendance_repository.dart';
-import '../../../data/repositories/announcements_repository.dart';
-import '../../auth/screens/sign_in_page.dart';
+import 'package:table_calendar/table_calendar.dart';
+import '../../../routes/app_routes.dart';
 
 class StudentDashboard extends StatefulWidget {
   const StudentDashboard({super.key});
@@ -12,171 +10,111 @@ class StudentDashboard extends StatefulWidget {
 }
 
 class _StudentDashboardState extends State<StudentDashboard> {
-  double promedio = 0.0;
-  double asistencia = 0.0;
-  String ultimoAnuncio = "";
-  bool cargando = true;
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
 
-  @override
-  void initState() {
-    super.initState();
-    cargarDatos();
-  }
+  final Map<DateTime, List<String>> _events = {
+    DateTime.utc(2025, 9, 2): ["Marcado de notas"],
+    DateTime.utc(2025, 9, 4): ["Examen de Matemáticas"],
+    DateTime.utc(2025, 9, 5): ["Entrega de tarea"],
+    DateTime.utc(2025, 9, 11): ["Exposición de Lenguaje"],
+    DateTime.utc(2025, 9, 18): ["Entrega Proyecto", "Reunión padres"],
+  };
 
-  void cargarDatos() async {
-    try {
-      // 👇 Aquí luego deberías usar el id real del estudiante que venga del login
-      const estudianteId = 1;
-
-      final notas = await GradesRepository.getByStudent(estudianteId);
-      final asistencias = await AttendanceRepository.getByStudent(estudianteId);
-      final anuncios = await AnnouncementsRepository.getAnnouncements();
-
-      setState(() {
-        promedio = _calcularPromedio(notas);
-        asistencia = _calcularAsistencia(asistencias);
-        ultimoAnuncio = anuncios.isNotEmpty ? anuncios.first["titulo"] : "";
-        cargando = false;
-      });
-    } catch (e) {
-      setState(() => cargando = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error al cargar datos: $e")),
-      );
-    }
-  }
-
-  double _calcularPromedio(List<dynamic> notas) {
-    if (notas.isEmpty) return 0.0;
-    final total = notas
-        .map((n) => (n["nota"] as num).toDouble())
-        .reduce((a, b) => a + b);
-    return total / notas.length;
-  }
-
-  double _calcularAsistencia(List<dynamic> asistencias) {
-    if (asistencias.isEmpty) return 0.0;
-    final presentes =
-        asistencias.where((a) => a["estado"] == "Presente").length;
-    return (presentes / asistencias.length) * 100;
+  List<String> _getEventsForDay(DateTime day) {
+    return _events[DateTime.utc(day.year, day.month, day.day)] ?? [];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Jesvaw EduSoft"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => const SignInPage2()),
-                (route) => false,
-              );
+        title: const Text("Dashboard Estudiante"),
+        leading: IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: () {
+              // Aquí puedes limpiar sesión, token, etc.
+            Navigator.pushReplacementNamed(context, "/signIn");
+          },
+        ),        
+      ),
+      body: Column(
+        children: [
+          //  Calendario principal
+          TableCalendar(
+            firstDay: DateTime.utc(DateTime.now().year, 1, 1),
+            lastDay: DateTime.utc(DateTime.now().year, 12, 31),
+            focusedDay: _focusedDay,
+            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+            eventLoader: _getEventsForDay,
+            startingDayOfWeek: StartingDayOfWeek.monday,
+            calendarFormat: CalendarFormat.month,
+            headerStyle:  HeaderStyle(
+              formatButtonVisible: false,
+              titleCentered: true,
+              leftChevronIcon: Icon(Icons.chevron_left),
+              rightChevronIcon: Icon(Icons.chevron_right),
+            ),
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _selectedDay = selectedDay;
+                _focusedDay = focusedDay;
+              });
             },
-          )
+            onPageChanged: (focusedDay) {
+              setState(() {
+                _focusedDay = focusedDay;
+              });
+            },
+          ),
+          const SizedBox(height: 8),
+          //  Eventos del día seleccionado
+          Expanded(
+            child: ListView(
+              children: _getEventsForDay(_selectedDay ?? _focusedDay)
+                  .map((event) => ListTile(
+                        leading: const Icon(Icons.event),
+                        title: Text(event),
+                      ))
+                  .toList(),
+            ),
+          ),
+          //  Botones de accesos rápidos
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              alignment: WrapAlignment.center,
+              children: [
+                _quickButton(
+                    context, Icons.school, "Notas", AppRoutes.notas),
+                _quickButton(context, Icons.check_circle_outline, "Asistencia",
+                    AppRoutes.asistencia),
+                _quickButton(context, Icons.event_note, "Agenda",
+                    AppRoutes.agenda),
+                _quickButton(context, Icons.campaign_outlined, "Anuncios",
+                    AppRoutes.announcements),
+                _quickButton(context, Icons.schedule, "Horario",
+                    AppRoutes.horario),
+              ],
+            ),
+          ),
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const UserAccountsDrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
-              accountName: Text("Estudiante"),
-              accountEmail: Text("student@test.com"),
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Icon(Icons.person, size: 40, color: Colors.blue),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.grade),
-              title: const Text("Notas"),
-              onTap: () {
-                Navigator.pushNamed(context, "/notas");
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.fact_check),
-              title: const Text("Asistencia"),
-              onTap: () {
-                Navigator.pushNamed(context, "/asistencia");
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.event),
-              title: const Text("Agenda"),
-              onTap: () {
-                Navigator.pushNamed(context, "/agenda");
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.campaign),
-              title: const Text("Anuncios"),
-              onTap: () {
-                Navigator.pushNamed(context, "/announcements");
-              },
-            ),
-          ],
-        ),
+    );
+  }
+
+  Widget _quickButton(
+      BuildContext context, IconData icon, String label, String route) {
+    return ElevatedButton.icon(
+      onPressed: () => Navigator.pushNamed(context, route),
+      icon: Icon(icon, size: 20),
+      label: Text(label),
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
-      body: cargando
-          ? const Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Text(
-                    "Bienvenido Estudiante",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
-                  Card(
-                    color: Colors.blue[50],
-                    child: ListTile(
-                      leading: const Icon(Icons.grade, color: Colors.blue),
-                      title: const Text("Promedio de Notas"),
-                      trailing: Text(
-                        promedio.toStringAsFixed(1),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Card(
-                    color: Colors.green[50],
-                    child: ListTile(
-                      leading: const Icon(Icons.fact_check, color: Colors.green),
-                      title: const Text("Asistencia"),
-                      trailing: Text(
-                        "${asistencia.toStringAsFixed(1)}%",
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Card(
-                    color: Colors.orange[50],
-                    child: ListTile(
-                      leading:
-                          const Icon(Icons.campaign, color: Colors.orange),
-                      title: const Text("Último Anuncio"),
-                      subtitle: Text(ultimoAnuncio),
-                    ),
-                  ),
-                ],
-              ),
-            ),
     );
   }
 }

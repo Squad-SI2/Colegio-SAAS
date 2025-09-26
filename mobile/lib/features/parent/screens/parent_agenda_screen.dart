@@ -1,36 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class AgendaEstudianteScreen extends StatefulWidget {
-  final int studentId;
-  const AgendaEstudianteScreen({super.key, required this.studentId});
+class ParentAgendaScreen extends StatefulWidget {
+  const ParentAgendaScreen({super.key});
 
   @override
-  State<AgendaEstudianteScreen> createState() => _AgendaEstudianteScreenState();
+  State<ParentAgendaScreen> createState() => _ParentAgendaScreenState();
 }
 
-class _AgendaEstudianteScreenState extends State<AgendaEstudianteScreen> {
+class _ParentAgendaScreenState extends State<ParentAgendaScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  Map<String, dynamic>? child;
 
-  // Tareas y exámenes dummy
-  final Map<DateTime, List<String>> _agenda = {
-    DateTime.utc(2025, 9, 2): ["Entrega tarea de Matemáticas"],
-    DateTime.utc(2025, 9, 4): ["Examen de Lenguaje"],
-    DateTime.utc(2025, 9, 7): ["Proyecto de Ciencias"],
-    DateTime.utc(2025, 9, 10): ["Examen de Historia"],
-    DateTime.utc(2025, 9, 15): ["Entrega tarea de Química"],
+  // Dummy de agenda por hijo
+  final Map<String, Map<DateTime, List<String>>> _agendaByChild = {
+    "Juan Pérez": {
+      DateTime.utc(2025, 9, 2): ["Entrega tarea de Matemáticas"],
+      DateTime.utc(2025, 9, 4): ["Examen de Lenguaje"],
+    },
+    "Ana Pérez": {
+      DateTime.utc(2025, 9, 7): ["Proyecto de Ciencias"],
+      DateTime.utc(2025, 9, 10): ["Examen de Historia"],
+    },
   };
 
   List<String> _getAgendaForDay(DateTime day) {
-    return _agenda[DateTime.utc(day.year, day.month, day.day)] ?? [];
+    if (child == null) return [];
+    final agenda = _agendaByChild[child!["name"]] ?? {};
+    return agenda[DateTime.utc(day.year, day.month, day.day)] ?? [];
   }
 
   @override
   Widget build(BuildContext context) {
+    // Recibimos hijo seleccionado
+    child = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Agenda del Estudiante"),
+        title: Text("Agenda - ${child?["name"] ?? "Hijo"}"),
       ),
       body: Column(
         children: [
@@ -61,7 +69,7 @@ class _AgendaEstudianteScreenState extends State<AgendaEstudianteScreen> {
           ),
           const SizedBox(height: 12),
 
-          // Lista de tareas y exámenes
+          // Lista de eventos
           Expanded(
             child: ListView(
               children: _getAgendaForDay(_selectedDay ?? _focusedDay)

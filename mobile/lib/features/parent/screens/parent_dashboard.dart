@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../data/repositories/parent_repository.dart';
-import '../../../data/repositories/announcements_repository.dart';
-import '../../auth/screens/sign_in_page.dart';
+import 'package:table_calendar/table_calendar.dart';
+import '../../../routes/app_routes.dart';
 
 class ParentDashboard extends StatefulWidget {
   const ParentDashboard({super.key});
@@ -11,173 +10,139 @@ class ParentDashboard extends StatefulWidget {
 }
 
 class _ParentDashboardState extends State<ParentDashboard> {
-  double promedio = 0.0;
-  double asistencia = 0.0;
-  String ultimoAnuncio = "";
-  bool cargando = true;
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+  Map<String, dynamic>? child;
 
-  @override
-  void initState() {
-    super.initState();
-    cargarDatos();
-  }
+  // 🔹 Dummy de eventos por hijo (luego vendrá del backend)
+  final Map<String, Map<DateTime, List<String>>> _eventsByChild = {
+    "Juan Pérez": {
+      DateTime.utc(2025, 9, 2): ["Reunión de padres"],
+      DateTime.utc(2025, 9, 10): ["Examen de Matemáticas"],
+    },
+    "Ana Pérez": {
+      DateTime.utc(2025, 9, 5): ["Entrega tarea Lenguaje"],
+      DateTime.utc(2025, 9, 18): ["Exposición Ciencias"],
+    },
+  };
 
-  void cargarDatos() async {
-    try {
-      // 👇 Aquí luego deberías usar el id real del padre que venga del login
-      const parentId = 1;
-
-      final hijos = await ParentRepository.getChildren(parentId);
-
-      if (hijos.isNotEmpty) {
-        final notas =
-            await ParentRepository.getChildrenGrades(parentId);
-        final asistencias =
-            await ParentRepository.getChildrenAttendance(parentId);
-        final anuncios = await AnnouncementsRepository.getAnnouncements();
-
-        setState(() {
-          promedio = _calcularPromedio(notas);
-          asistencia = _calcularAsistencia(asistencias);
-          ultimoAnuncio =
-              anuncios.isNotEmpty ? anuncios.first["titulo"] : "";
-          cargando = false;
-        });
-      } else {
-        setState(() => cargando = false);
-      }
-    } catch (e) {
-      setState(() => cargando = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error al cargar datos: $e")),
-      );
-    }
-  }
-
-  double _calcularPromedio(List<dynamic> notas) {
-    if (notas.isEmpty) return 0.0;
-    final total = notas
-        .map((n) => (n["nota"] as num).toDouble())
-        .reduce((a, b) => a + b);
-    return total / notas.length;
-  }
-
-  double _calcularAsistencia(List<dynamic> asistencias) {
-    if (asistencias.isEmpty) return 0.0;
-    final presentes =
-        asistencias.where((a) => a["estado"] == "Presente").length;
-    return (presentes / asistencias.length) * 100;
+  List<String> _getEventsForDay(DateTime day) {
+    if (child == null) return [];
+    final events = _eventsByChild[child!["name"]] ?? {};
+    return events[DateTime.utc(day.year, day.month, day.day)] ?? [];
   }
 
   @override
   Widget build(BuildContext context) {
+    // Recibimos el hijo seleccionado desde SelectChildScreen
+    child = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+    if (child == null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text("Dashboard Padre")),
+        body: const Center(
+          child: Text(
+            "No se seleccionó ningún hijo",
+            style: TextStyle(fontSize: 16),
+          ),
+        ),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Jesvaw EduSoft"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => const SignInPage2()),
-                (route) => false,
-              );
-            },
-          )
-        ],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const UserAccountsDrawerHeader(
-              decoration: BoxDecoration(color: Colors.green),
-              accountName: Text("Padre"),
-              accountEmail: Text("parent@test.com"),
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Icon(Icons.person, size: 40, color: Colors.green),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.grade),
-              title: const Text("Notas de Hijos"),
-              onTap: () {
-                Navigator.pushNamed(context, "/parentNotas");
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.fact_check),
-              title: const Text("Asistencia de Hijos"),
-              onTap: () {
-                Navigator.pushNamed(context, "/parentAsistencia");
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.campaign),
-              title: const Text("Anuncios"),
-              onTap: () {
-                Navigator.pushNamed(context, "/announcements");
-              },
-            ),
-          ],
+        title: Text("Dashboard Padre - ${child?["name"] ?? "Hijo"}"),
+        leading: IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: () {
+            // Aquí puedes limpiar sesión, token, etc.
+            Navigator.pushReplacementNamed(context, "/signIn");
+          },
         ),
       ),
-      body: cargando
-          ? const Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Text(
-                    "Bienvenido Padre",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
-                  Card(
-                    color: Colors.blue[50],
-                    child: ListTile(
-                      leading: const Icon(Icons.grade, color: Colors.blue),
-                      title: const Text("Promedio de Notas de Hijos"),
-                      trailing: Text(
-                        promedio.toStringAsFixed(1),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Card(
-                    color: Colors.green[50],
-                    child: ListTile(
-                      leading: const Icon(Icons.fact_check, color: Colors.green),
-                      title: const Text("Asistencia de Hijos"),
-                      trailing: Text(
-                        "${asistencia.toStringAsFixed(1)}%",
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Card(
-                    color: Colors.orange[50],
-                    child: ListTile(
-                      leading:
-                          const Icon(Icons.campaign, color: Colors.orange),
-                      title: const Text("Último Anuncio"),
-                      subtitle: Text(ultimoAnuncio),
-                    ),
-                  ),
-                ],
-              ),
+      body: Column(
+        children: [
+          //  Calendario
+          TableCalendar(
+            firstDay: DateTime.utc(DateTime.now().year, 1, 1),
+            lastDay: DateTime.utc(DateTime.now().year, 12, 31),
+            focusedDay: _focusedDay,
+            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+            eventLoader: _getEventsForDay,
+            startingDayOfWeek: StartingDayOfWeek.monday,
+            calendarFormat: CalendarFormat.month,
+            headerStyle:  HeaderStyle(
+              formatButtonVisible: false,
+              titleCentered: true,
+              leftChevronIcon: Icon(Icons.chevron_left),
+              rightChevronIcon: Icon(Icons.chevron_right),
             ),
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _selectedDay = selectedDay;
+                _focusedDay = focusedDay;
+              });
+            },
+            onPageChanged: (focusedDay) {
+              setState(() {
+                _focusedDay = focusedDay;
+              });
+            },
+          ),
+          const SizedBox(height: 8),
+
+          //  Lista de eventos del día
+          Expanded(
+            child: ListView(
+              children: _getEventsForDay(_selectedDay ?? _focusedDay)
+                  .map((event) => ListTile(
+                        leading: const Icon(Icons.event),
+                        title: Text(event),
+                      ))
+                  .toList(),
+            ),
+          ),
+
+          //  Botones de acceso rápido
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              alignment: WrapAlignment.center,
+              children: [
+                _quickButton(context, Icons.school, "Notas",
+                    AppRoutes.parentNotas, child!),
+                _quickButton(context, Icons.check_circle_outline, "Asistencia",
+                    AppRoutes.parentAsistencia, child!),
+                _quickButton(context, Icons.campaign_outlined, "Anuncios",
+                    AppRoutes.announcements, child!),
+                _quickButton(context, Icons.schedule, "Horario",
+                    AppRoutes.horario, child!),
+                _quickButton(context, Icons.event_note, "Agenda",
+                    AppRoutes.parentAgenda, child!),  
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
+
+  //  QuickButton ahora recibe el hijo y lo pasa como argumento
+  Widget _quickButton(BuildContext context, IconData icon, String label,
+      String route, Map<String, dynamic> child) {
+    return ElevatedButton.icon(
+      onPressed: () => Navigator.pushNamed(
+        context,
+        route,
+        arguments: child, // se pasa el hijo seleccionado
+      ),
+      icon: Icon(icon, size: 20),
+      label: Text(label),
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+    );
+  }
+  
 }

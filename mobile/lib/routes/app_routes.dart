@@ -13,9 +13,19 @@ import '../features/student/screens/agenda_screen.dart';
 import '../features/parent/screens/parent_dashboard.dart';
 import '../features/parent/screens/parent_notas_screen.dart';
 import '../features/parent/screens/parent_asistencia_screen.dart';
+import '../features/parent/screens/select_child_screen.dart'; 
+import '../features/parent/screens/parent_agenda_screen.dart';
+import '../features/parent/screens/parent_agenda_screen.dart';
 
 // Announcements
 import '../features/announcements/screens/announcements_screen.dart';
+
+// nuevo 
+import '../features/teacher/screens/teacher_dashboard.dart';
+
+// teacher
+import '../features/horario/screens/horario_screen.dart';
+
 
 
 class AppRoutes {
@@ -31,13 +41,21 @@ class AppRoutes {
   static const String parentDashboard = "/parentDashboard";
   static const String parentNotas = "/parentNotas";
   static const String parentAsistencia = "/parentAsistencia";
+  static const String selectChild = "/selectChild"; 
+  static const String parentAgenda = "/parentAgenda";
+
+  //Nuevo 
+  static const String teacherDashboard = "/teacherDashboard";
+  static const String horario = "/horario";
+  
+
 
   // Shared
   static const String announcements = "/announcements";
 
   static Map<String, WidgetBuilder> routes = {
     // Auth
-    signIn: (context) => const SignInPage2(),
+    signIn: (context) => const SignInPage(),
 
     // Student
     studentDashboard: (context) => const StudentDashboard(),
@@ -46,9 +64,23 @@ class AppRoutes {
     agenda: (context) => const AgendaEstudianteScreen(studentId: 1),
 
     // Parent
+    selectChild: (context) => const SelectChildScreen(), 
     parentDashboard: (context) => const ParentDashboard(),
-    parentNotas: (context) => const ParentNotasScreen(parentId: 1),
-    parentAsistencia: (context) => const ParentAsistenciaScreen(parentId: 1),
+    parentNotas: (context) => const ParentNotasScreen(),
+    parentAsistencia: (context) => const ParentAsistenciaScreen(),
+    parentAgenda: (context) => const ParentAgendaScreen(),
+
+    //teacher 
+    teacherDashboard: (context) => const TeacherDashboard(), // pantalla vacía por ahora
+    
+    
+    //Horario
+    horario: (context) => const HorarioScreen(), // pantalla dummy
+   
+
+
+
+
 
     // Shared
     announcements: (context) => const AnnouncementsScreen(),
